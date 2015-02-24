@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TessApp</string>
+    <string name="serviceUrl">https://192.168.1.78:8999/postFileForOcr</string>
+    <integer name="connectionTimeout">3000</integer>
+    <integer name="socketTimeout">10000</integer>
+</resources>
