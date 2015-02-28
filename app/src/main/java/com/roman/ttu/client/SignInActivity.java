@@ -24,6 +24,8 @@ import com.squareup.okhttp.OkHttpClient;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -31,8 +33,6 @@ import retrofit.client.Response;
 import static java.util.Arrays.asList;
 
 public class SignInActivity extends Activity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-
-
     /* Request code used to invoke sign in user interactions. */
     private static final int RC_SIGN_IN = 0;
     private static final int AUTH_CODE_REQUEST_CODE = 101;
@@ -48,10 +48,13 @@ public class SignInActivity extends Activity implements GoogleApiClient.Connecti
     private boolean mSignInClicked;
     private ConnectionResult mConnectionResult;
     private SignInButton button;
+    @Inject
+    RestClient restClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((Application) getApplication()).getObjectGraph().inject(this);
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -77,7 +80,9 @@ public class SignInActivity extends Activity implements GoogleApiClient.Connecti
     @Override
     protected void onStart() {
         super.onStart();
-        mGoogleApiClient.connect();
+        if( !mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.connect();
+        }
     }
 
     @Override
@@ -86,7 +91,6 @@ public class SignInActivity extends Activity implements GoogleApiClient.Connecti
         if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
             button.setVisibility(View.VISIBLE);
-
         }
     }
 
@@ -121,7 +125,6 @@ public class SignInActivity extends Activity implements GoogleApiClient.Connecti
 
             @Override
             protected void onPostExecute(String token) {
-                RestClient restClient = new RestClient();
                 restClient.getSignInService().postRequest(token, new Callback<String>() {
                     @Override
                     public void success(String s, Response response) {
@@ -142,7 +145,6 @@ public class SignInActivity extends Activity implements GoogleApiClient.Connecti
     @Override
     public void onConnectionSuspended(int i) {
         mGoogleApiClient.connect();
-
     }
 
     public void onClick(View view) {
@@ -190,7 +192,6 @@ public class SignInActivity extends Activity implements GoogleApiClient.Connecti
             // Store the ConnectionResult so that we can use it later when the user clicks
             // 'sign-in'.
             mConnectionResult = connectionResult;
-
             if (mSignInClicked) {
                 // The user has already clicked 'sign-in' so we attempt to resolve all
                 // errors until the user is signed in, or they cancel.
