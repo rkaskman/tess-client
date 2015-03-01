@@ -1,15 +1,14 @@
 package com.roman.ttu.client;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
+
 
 import com.example.TessClient.R;
 import com.google.android.gms.auth.GoogleAuthException;
@@ -48,6 +47,8 @@ public class SignInActivity extends Activity implements GoogleApiClient.Connecti
     private boolean mSignInClicked;
     private ConnectionResult mConnectionResult;
     private SignInButton button;
+    private ProgressDialog progressDialog;
+
     @Inject
     RestClient restClient;
 
@@ -55,6 +56,8 @@ public class SignInActivity extends Activity implements GoogleApiClient.Connecti
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((Application) getApplication()).getObjectGraph().inject(this);
+
+        setContentView(R.layout.start);
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -62,7 +65,6 @@ public class SignInActivity extends Activity implements GoogleApiClient.Connecti
                 .addScope(Plus.SCOPE_PLUS_LOGIN)
                 .build();
 
-        setContentView(R.layout.start);
         button = (SignInButton) findViewById(R.id.sign_in_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +76,13 @@ public class SignInActivity extends Activity implements GoogleApiClient.Connecti
                 }
             }
         });
+        createProgressDialog();
+    }
 
+    private void createProgressDialog() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Authentication in progress");
+        progressDialog.setMessage("Processing...");
     }
 
     @Override
@@ -83,6 +91,7 @@ public class SignInActivity extends Activity implements GoogleApiClient.Connecti
         if( !mGoogleApiClient.isConnected()) {
             mGoogleApiClient.connect();
         }
+        progressDialog.show();
     }
 
     @Override
@@ -128,12 +137,14 @@ public class SignInActivity extends Activity implements GoogleApiClient.Connecti
                 restClient.getSignInService().postRequest(token, new Callback<String>() {
                     @Override
                     public void success(String s, Response response) {
-                        System.out.println();
+                        progressDialog.dismiss();
+                        Intent intent = new Intent(SignInActivity.this, TessActivity.class);
+                        startActivity(intent);
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                        System.out.println();
+
                     }
                 });
 
