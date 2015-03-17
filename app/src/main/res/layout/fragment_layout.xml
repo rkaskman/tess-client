@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.roman.ttu.client.DashboardLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_weight="1"
+    android:background="#1c1c19">
+
+    <Button
+        android:id="@+id/btn_camera"
+        style="@style/DashboardButton"
+        android:drawableTop="@drawable/camera_button"
+        android:text="@string/db_camera_btn_text" />
+</com.roman.ttu.client.DashboardLayout>

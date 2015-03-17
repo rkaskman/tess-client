@@ -3,8 +3,12 @@ package com.roman.ttu.client;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.roman.ttu.client.service.SignInService;
+import com.roman.ttu.client.service.TestService;
 import com.squareup.okhttp.OkHttpClient;
 
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 import java.security.cert.CertificateException;
 
 import javax.net.ssl.HostnameVerifier;
@@ -19,8 +23,9 @@ import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
 
 public class RestClient {
-    private static final String BASE_URL = "https://192.168.1.78:8999/";
+    private static final String BASE_URL = "https://192.168.1.100:8999/";
     private SignInService signInService;
+    private TestService testService;
 
     public RestClient() {
         Gson gson = new GsonBuilder()
@@ -34,18 +39,27 @@ public class RestClient {
                 .setClient(getHttpClientForTestingPurposes())
                 .build();
 
+        CookieManager cookieManager = new CookieManager();
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+        CookieHandler.setDefault(cookieManager);
+
         signInService = restAdapter.create(SignInService.class);
+        testService = restAdapter.create(TestService.class);
     }
+
 
     public SignInService getSignInService() {
         return signInService;
     }
 
+    public TestService getTestService() {
+        return testService;
+    }
 
     private OkClient getHttpClientForTestingPurposes() {
         try {
             // Create a trust manager that does not validate certificate chains
-            final TrustManager[] trustAllCerts = new TrustManager[] {
+            final TrustManager[] trustAllCerts = new TrustManager[]{
                     new X509TrustManager() {
                         @Override
                         public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {

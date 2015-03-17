@@ -1,4 +1,4 @@
-package com.roman.ttu.client;
+package com.roman.ttu.client.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -19,7 +19,8 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
-import com.squareup.okhttp.OkHttpClient;
+import com.roman.ttu.client.Application;
+import com.roman.ttu.client.RestClient;
 
 import java.io.IOException;
 
@@ -49,6 +50,8 @@ public class SignInActivity extends Activity implements GoogleApiClient.Connecti
     private SignInButton button;
     private ProgressDialog progressDialog;
 
+
+    //TODO: remove
     @Inject
     RestClient restClient;
 
@@ -72,6 +75,7 @@ public class SignInActivity extends Activity implements GoogleApiClient.Connecti
                 if (v.getId() == R.id.sign_in_button
                         && !mGoogleApiClient.isConnecting()) {
                     mSignInClicked = true;
+                    mGoogleApiClient.connect();
                     resolveSignInError();
                 }
             }
@@ -117,6 +121,7 @@ public class SignInActivity extends Activity implements GoogleApiClient.Connecti
                             SignInActivity.this,
                             Plus.AccountApi.getAccountName(mGoogleApiClient),
                             "oauth2:" + SCOPES);
+
                 } catch (IOException transientEx) {
                     // Network or server error, try later
                 } catch (UserRecoverableAuthException e) {
@@ -133,13 +138,22 @@ public class SignInActivity extends Activity implements GoogleApiClient.Connecti
             }
 
             @Override
-            protected void onPostExecute(String token) {
-                restClient.getSignInService().postRequest(token, new Callback<String>() {
+            protected void onPostExecute(final String token) {
+                restClient.getSignInService().signIn(token, new Callback<String>() {
                     @Override
                     public void success(String s, Response response) {
                         progressDialog.dismiss();
-                        Intent intent = new Intent(SignInActivity.this, TessActivity.class);
-                        startActivity(intent);
+                        restClient.getTestService().brah(new Callback<String>() {
+                            @Override
+                            public void success(String s, Response response) {
+                                System.out.println();
+                            }
+
+                            @Override
+                            public void failure(RetrofitError error) {
+                                System.out.println();
+                            }
+                        });
                     }
 
                     @Override

@@ -6,5 +6,5 @@ import retrofit.http.Query;
 
 public interface SignInService {
     @POST("/")
-    public void postRequest(@Query("authToken") String token, Callback<String> callback);
+    public void signIn(@Query("authToken") String token, Callback<String> callback);
 }
