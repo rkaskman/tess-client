@@ -40,7 +40,7 @@ public class AuthenticationAwareActivityCallback<T> extends SessionAwareCallback
         SharedPreferences sharedPreferences = activity.getSharedPreferences(PREFERENCE_KEY, 0);
         SharedPreferences.Editor edit = sharedPreferences.edit();
 
-        edit.putLong(SESSION_EXPIRES_AT_KEY, Long.parseLong(header.getValue()));
+        edit.putLong(SESSION_EXPIRES_AT_KEY, System.currentTimeMillis() + Long.parseLong(header.getValue()));
         edit.commit();
     }
 

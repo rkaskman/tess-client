@@ -5,7 +5,7 @@ import retrofit.http.POST;
 
 public interface TestService {
 
-    @POST("/uu")
+    @POST("/ocr/do")
     public void brah(Callback<String> callback);
 
 }

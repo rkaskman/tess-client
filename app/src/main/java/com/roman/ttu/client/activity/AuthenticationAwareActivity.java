@@ -72,20 +72,25 @@ public abstract class AuthenticationAwareActivity extends Activity {
         }
     }
 
-    private void establishSessionIfExpired() throws IOException, GoogleAuthException {
-        long sessionExpiresAt = sharedPreferences.getLong(SharedPreferencesConfig.SESSION_EXPIRES_AT_KEY, 0);
-        long sessionRenewalTime = sessionExpiresAt - TIME_BUFFER_BEFORE_SESSION_EXPIRY_MILLIS;
+    protected boolean establishSessionIfExpired() throws IOException, GoogleAuthException {
+        long sessionRenewalTime = getSessionRenewalTime();
         if (sessionRenewalTime < System.currentTimeMillis()) {
             if (!isDeviceOnline()) {
                 Toast.makeText(this, "Device is not online", Toast.LENGTH_LONG);
-                return;
+                return false;
             }
 
             progressDialog.show();
             new GoogleTokenRetriever(this, tokenRetrievalCallback,
                     sharedPreferences.getString(GOOGLE_USER_EMAIL, null)).execute();
-
+            return true;
         }
+        return false;
+    }
+
+    protected long getSessionRenewalTime() {
+        long sessionExpiresAt = sharedPreferences.getLong(SharedPreferencesConfig.SESSION_EXPIRES_AT_KEY, 0);
+        return sessionExpiresAt - TIME_BUFFER_BEFORE_SESSION_EXPIRY_MILLIS;
     }
 
     public boolean isDeviceOnline() {

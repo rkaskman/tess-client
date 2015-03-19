@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.common.AccountPicker;
+
+import java.io.IOException;
 
 import retrofit.client.Response;
 
@@ -19,9 +22,7 @@ public class StartActivity extends AuthenticationAwareActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-
 //        setContentView();
         if (!sharedPreferences.contains(GOOGLE_USER_EMAIL)) {
             String[] accountTypes = new String[]{GOOGLE_ACCOUNT_TYPE};
@@ -29,6 +30,14 @@ public class StartActivity extends AuthenticationAwareActivity {
                     accountTypes, false, null, null, null, null);
             startActivityForResult(intent, REQUEST_CODE_PICK_ACCOUNT, savedInstanceState);
         }
+    }
+
+    @Override
+    protected boolean establishSessionIfExpired() throws IOException, GoogleAuthException {
+        if (!super.establishSessionIfExpired()) {
+            startDashboardActivity();
+        }
+        return false;
     }
 
     @Override
@@ -51,18 +60,22 @@ public class StartActivity extends AuthenticationAwareActivity {
         editor.commit();
     }
 
-    class StartingSignInCallBack extends SignInCallBack {
-        @Override
-        public void success(Object o, Response response) {
-            super.success(o, response);
-            Intent intent = new Intent(StartActivity.this, DashboardActivity.class);
-            startActivity(intent);
-            finish();
-        }
+    private void startDashboardActivity() {
+        Intent intent = new Intent(this, DashboardActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override
     protected SignInCallBack getSignInCallback() {
         return startingSignInCallBack;
+    }
+
+    class StartingSignInCallBack extends SignInCallBack {
+        @Override
+        public void success(Object o, Response response) {
+            super.success(o, response);
+            startDashboardActivity();
+        }
     }
 }

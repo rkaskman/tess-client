@@ -28,7 +28,8 @@
             <!--</intent-filter>-->
         </activity>
 
-        <activity android:name="com.roman.ttu.client.TessActivity"/>
+        <activity android:name="com.roman.ttu.client.activity.ReceiptPictureTakingActivity"/>
+        <activity android:name="com.roman.ttu.client.activity.ImageEditingActivity"/>
         <activity android:name="com.roman.ttu.client.SubmitOcrActivity"/>
         <activity android:name="com.roman.ttu.client.activity.StartActivity">
             <intent-filter>

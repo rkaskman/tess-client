@@ -1,24 +1,22 @@
-package com.roman.ttu.client;
+package com.roman.ttu.client.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 
 import com.example.TessClient.R;
-import com.roman.ttu.client.rest.CallbackAction;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class TessActivity extends Activity {
+public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+    private static final int EDIT_IMAGE = 7001;
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
     private Button button;
@@ -30,14 +28,8 @@ public class TessActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        button = (Button) findViewById(R.id.button);
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startCamera();
-            }
-        });
+//        button = (Button) findViewById(R.id.button);
+        startCamera();
     }
 
     private void startCamera() {
@@ -50,15 +42,9 @@ public class TessActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-            File imageFile = new File(fileUri.getPath());
-            if (imageFile.exists() && imageFile.length() > 0) {
-                new PhotosPostingTask(imageFile, this, new CallbackAction() {
-                    @Override
-                    public void execute() {
-                        button.setEnabled(false);
-                    }
-                }).execute();
-            }
+            Intent imageEditingIntent = new Intent(this, ImageEditingActivity.class);
+            imageEditingIntent.putExtra("imageFileUri", fileUri);
+            startActivityForResult(imageEditingIntent, EDIT_IMAGE);
         }
     }
 

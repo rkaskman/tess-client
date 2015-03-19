@@ -1,21 +1,15 @@
 package com.roman.ttu.client.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
 import com.example.TessClient.R;
 import com.roman.ttu.client.Application;
-import com.roman.ttu.client.RestClient;
-
-import javax.inject.Inject;
-
 
 public class DashboardActivity extends Activity {
-
-    @Inject
-    RestClient restClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +21,7 @@ public class DashboardActivity extends Activity {
         camButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(new Intent(DashboardActivity.this, ReceiptPictureTakingActivity.class));
             }
         });
     }
