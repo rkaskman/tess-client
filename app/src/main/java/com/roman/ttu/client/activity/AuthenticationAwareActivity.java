@@ -76,7 +76,7 @@ public abstract class AuthenticationAwareActivity extends Activity {
         long sessionRenewalTime = getSessionRenewalTime();
         if (sessionRenewalTime < System.currentTimeMillis()) {
             if (!isDeviceOnline()) {
-                Toast.makeText(this, "Device is not online", Toast.LENGTH_LONG);
+                Toast.makeText(this, "Device is not online", Toast.LENGTH_LONG).show();
                 return false;
             }
 

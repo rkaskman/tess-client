@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 
 import com.example.TessClient.R;
@@ -28,8 +29,13 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-//        button = (Button) findViewById(R.id.button);
-        startCamera();
+        button = (Button) findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startCamera();
+            }
+        });
     }
 
     private void startCamera() {
@@ -37,6 +43,8 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
         fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+
+        overridePendingTransition(R.animator.activity_fadeout, R.animator.activity_fadein);
     }
 
     @Override

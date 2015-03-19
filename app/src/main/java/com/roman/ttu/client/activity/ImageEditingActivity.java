@@ -1,6 +1,7 @@
 package com.roman.ttu.client.activity;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -10,20 +11,25 @@ import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.TessClient.R;
 
 import java.io.File;
+import java.io.FileOutputStream;
 
 import static android.graphics.Bitmap.Config;
 import static android.view.View.OnTouchListener;
 import static android.view.View.VISIBLE;
 
 public class ImageEditingActivity extends Activity {
+    public static final String APP_IMAGE_DIRECTORY = "TessApp";
     ImageView resultImageView;
     ImageView drawingImageView;
 
@@ -48,6 +54,18 @@ public class ImageEditingActivity extends Activity {
         button = (Button) findViewById(R.id.save_picture_button);
         button.setVisibility(View.INVISIBLE);
 
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                button.setVisibility(View.GONE);
+                Point startPoint = getStartForCroppedBitmap();
+                Bitmap cropped = Bitmap.createBitmap(parentBitmap, startPoint.x, startPoint.y,
+                        Math.abs(startPoint.x - endPoint.x), Math.abs(startPoint.y - endPoint.y));
+
+                createImageFileFromCroppedBitmap(cropped);
+            }
+        });
+
         resultImageView = (ImageView) findViewById(R.id.result_image);
         drawingImageView = (ImageView) findViewById(R.id.drawing_pane);
 
@@ -55,37 +73,87 @@ public class ImageEditingActivity extends Activity {
 
         File imageFile = new File(fileUri.getPath());
         if (imageFile.exists()) {
-            Bitmap sourceBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
-            Config bitmapConfig = sourceBitmap.getConfig() != null ? sourceBitmap.getConfig() : Config.ARGB_8888;
-
-            parentBitmap = Bitmap.createBitmap(
-                    sourceBitmap.getWidth(),
-                    sourceBitmap.getHeight(),
-                    bitmapConfig);
-            parentCanvas = new Canvas(parentBitmap);
-            parentCanvas.drawBitmap(sourceBitmap, 0, 0, null);
-            resultImageView.setImageBitmap(parentBitmap);
-
-            drawingBitmap = Bitmap.createBitmap(
-                    sourceBitmap.getWidth(),
-                    sourceBitmap.getHeight(),
-                    bitmapConfig);
-
-            drawingCanvas = new Canvas(drawingBitmap);
-            drawingImageView.setImageBitmap(drawingBitmap);
-            initializePaint();
-            resultImageView.setOnTouchListener(touchEventListener);
+            initializeDrawingComponents(imageFile);
         }
+    }
+
+    private void createImageFileFromCroppedBitmap(Bitmap cropped) {
+        File imagesDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                APP_IMAGE_DIRECTORY);
+
+        imagesDir.mkdirs();
+        String filename = "tess_" + System.currentTimeMillis() + ".jpg";
+        File destinationFile = new File(imagesDir, filename);
+
+        try {
+            FileOutputStream out = new FileOutputStream(destinationFile);
+            cropped.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+            out.close();
+
+            saveImageToMediaStore(destinationFile);
+            button.setOnClickListener(null);
+        } catch (Exception e) {
+            Toast.makeText(this, "Failed to store images", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void saveImageToMediaStore(File destinationFile) {
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, destinationFile.getName());
+        values.put(MediaStore.Images.Media.DESCRIPTION, "desc");
+        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+        values.put(MediaStore.MediaColumns.DATA, destinationFile.getAbsolutePath());
+
+        getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+    }
+
+    private Point getStartForCroppedBitmap() {
+        if (startPoint.x < endPoint.x && startPoint.y < endPoint.y) {
+            return startPoint;
+        } else if (startPoint.x < endPoint.x && startPoint.y > endPoint.y) {
+            return new Point(startPoint.x, endPoint.y);
+        } else if (startPoint.x > endPoint.x && startPoint.y < endPoint.y) {
+            return new Point(endPoint.x, startPoint.y);
+        } else if (startPoint.x > endPoint.x && startPoint.y > endPoint.y) {
+            return endPoint;
+        }
+
+        return null;
+    }
+
+    private void initializeDrawingComponents(File imageFile) {
+        Bitmap sourceBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+        Config bitmapConfig = sourceBitmap.getConfig() != null ? sourceBitmap.getConfig() : Config.ARGB_8888;
+
+        parentBitmap = Bitmap.createBitmap(
+                sourceBitmap.getWidth(),
+                sourceBitmap.getHeight(),
+                bitmapConfig);
+        parentCanvas = new Canvas(parentBitmap);
+        parentCanvas.drawBitmap(sourceBitmap, 0, 0, null);
+        resultImageView.setImageBitmap(parentBitmap);
+
+        drawingBitmap = Bitmap.createBitmap(
+                sourceBitmap.getWidth(),
+                sourceBitmap.getHeight(),
+                bitmapConfig);
+
+        drawingCanvas = new Canvas(drawingBitmap);
+        drawingImageView.setImageBitmap(drawingBitmap);
+        initializePaint();
+        resultImageView.setOnTouchListener(touchEventListener);
     }
 
     private void initializePaint() {
         paint = new Paint();
         paint.setColor(Color.RED);
-        paint.setStrokeWidth(5 * 3);
+        paint.setStrokeWidth(15);
         paint.setStyle(Paint.Style.STROKE);
     }
 
-    private void drawOnDrawingCanvas(ImageView view, float x, float y) {
+    private void drawOnCanvas(ImageView view, float x, float y) {
         if (touchOutSideView(view, x, y)) {
             return;
         } else {
@@ -113,10 +181,6 @@ public class ImageEditingActivity extends Activity {
         }
     }
 
-//    private void drawFinal() {
-//        parentCanvas.drawBitmap(drawingBitmap, 0, 0, null);
-//    }
-
     OnTouchListener touchEventListener = new OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -132,11 +196,11 @@ public class ImageEditingActivity extends Activity {
                     startPoint = getStartPoint(imageView, x, y);
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    drawOnDrawingCanvas(imageView, x, y);
+                    drawOnCanvas(imageView, x, y);
                     break;
                 case MotionEvent.ACTION_UP:
-                    drawOnDrawingCanvas(imageView, x, y);
-                    endPoint = new Point((int) x, (int) y);
+                    drawOnCanvas(imageView, x, y);
+                    endPoint = getStartPoint(imageView, x, y);
                     button.setVisibility(VISIBLE);
                     break;
             }

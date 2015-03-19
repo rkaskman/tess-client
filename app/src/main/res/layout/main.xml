@@ -6,16 +6,26 @@
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="387dp"
-            android:layout_height="0dp" android:layout_weight="0.33">
+            android:layout_height="0dp" android:layout_weight="0.33"
+        android:weightSum="1">
+
     </LinearLayout>
-    <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Use camera"
-            android:id="@+id/button" android:layout_gravity="center_horizontal" android:layout_weight="0.03"/>
+
     <TextView
-            android:layout_width="141dp"
-            android:layout_height="55dp"
-            android:id="@+id/textView" android:layout_gravity="center_horizontal"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Take two pictures: first of the enterprise registration number, second of purchase total cost"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textAlignment="gravity"
+        android:id="@+id/image_takig_explanation"
+        android:layout_weight="0.45" />
+
+    <Button
+            android:layout_width="106dp"
+            android:layout_height="wrap_content"
+            android:text="Go"
+            android:id="@+id/button" android:layout_gravity="center_horizontal"
+        android:background="@color/wallet_highlighted_text_holo_light" />
 </LinearLayout>
 
