@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.TessClient.R;
-import com.roman.ttu.client.IOUtil;
+import com.roman.ttu.client.util.IOUtil;
 import com.roman.ttu.client.rest.ImagesWrapper;
 import com.roman.ttu.client.service.AuthenticationAwareActivityCallback;
 
@@ -97,13 +97,7 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
 
     private ImageWrapper getImageWrapperFor(File imageFile) throws IOException {
         String encodedImage = Base64.encodeToString(IOUtil.readFile(imageFile), Base64.DEFAULT);
-        String imageFileExtension = getImageFileExtension(imageFile);
-        return new ImageWrapper(encodedImage, imageFileExtension);
-    }
-
-    private String getImageFileExtension(File file) {
-        String filenameArray[] = file.getName().split("\\.");
-        return filenameArray[filenameArray.length - 1];
+        return new ImageWrapper(encodedImage, imageFile.getName());
     }
 
     private static Uri getOutputMediaFileUri(int type) {

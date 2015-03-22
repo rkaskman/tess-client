@@ -41,6 +41,11 @@ public class StartActivity extends AuthenticationAwareActivity {
     }
 
     @Override
+    protected boolean shouldAuthenticate(long sessionRenewalTime) {
+        return true;
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_PICK_ACCOUNT) {

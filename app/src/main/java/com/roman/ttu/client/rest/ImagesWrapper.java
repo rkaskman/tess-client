@@ -11,11 +11,11 @@ public class ImagesWrapper {
 
     public static class ImageWrapper {
         public String encodedImage;
-        public String fileExtension;
+        public String fileName;
 
-        public ImageWrapper(String encodedImage, String fileExtension) {
+        public ImageWrapper(String encodedImage, String fileName) {
             this.encodedImage = encodedImage;
-            this.fileExtension = fileExtension;
+            this.fileName = fileName;
         }
     }
 

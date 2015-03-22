@@ -1,4 +1,4 @@
-package com.roman.ttu.client;
+package com.roman.ttu.client.util;
 
 import java.io.*;
 

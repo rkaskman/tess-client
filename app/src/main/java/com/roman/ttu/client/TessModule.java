@@ -3,7 +3,6 @@ package com.roman.ttu.client;
 
 import com.roman.ttu.client.activity.DashboardActivity;
 import com.roman.ttu.client.activity.ReceiptPictureTakingActivity;
-import com.roman.ttu.client.activity.SignInActivity;
 import com.roman.ttu.client.activity.StartActivity;
 import com.roman.ttu.client.rest.RestClient;
 
