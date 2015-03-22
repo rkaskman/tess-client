@@ -1,11 +1,13 @@
-package com.roman.ttu.client;
+package com.roman.ttu.client.rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.roman.ttu.client.service.SignInService;
-import com.roman.ttu.client.service.TestService;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import com.squareup.okhttp.OkHttpClient;
 
+import java.io.IOException;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
@@ -23,9 +25,9 @@ import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
 
 public class RestClient {
-    private static final String BASE_URL = "https://192.168.1.100:8999/";
+    private static final String BASE_URL = "https://192.168.10.105:8999/";
     private SignInService signInService;
-    private TestService testService;
+    private ImagePostingService imagePostingService;
 
     public RestClient() {
         Gson gson = new GsonBuilder()
@@ -44,7 +46,7 @@ public class RestClient {
         CookieHandler.setDefault(cookieManager);
 
         signInService = restAdapter.create(SignInService.class);
-        testService = restAdapter.create(TestService.class);
+        imagePostingService = restAdapter.create(ImagePostingService.class);
     }
 
 
@@ -52,8 +54,8 @@ public class RestClient {
         return signInService;
     }
 
-    public TestService getTestService() {
-        return testService;
+    public ImagePostingService getImagePostingService() {
+        return imagePostingService;
     }
 
     private OkClient getHttpClientForTestingPurposes() {

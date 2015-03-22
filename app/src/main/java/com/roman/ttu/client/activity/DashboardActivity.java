@@ -16,12 +16,13 @@ public class DashboardActivity extends Activity {
         super.onCreate(savedInstanceState);
         ((Application) getApplication()).getObjectGraph().inject(this);
         setContentView(R.layout.dashboard_layout);
-        Button camButton = (Button) findViewById(R.id.btn_camera);
+        Button cameraButton = (Button) findViewById(R.id.btn_camera);
 
-        camButton.setOnClickListener(new View.OnClickListener() {
+        cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(DashboardActivity.this, ReceiptPictureTakingActivity.class));
+                overridePendingTransition(R.animator.activity_fadein, R.animator.activity_fadeout);
             }
         });
     }

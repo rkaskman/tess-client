@@ -2,6 +2,8 @@ package com.roman.ttu.client.activity;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -20,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.TessClient.R;
+import com.roman.ttu.client.SharedPreferencesConfig;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,6 +33,7 @@ import static android.view.View.VISIBLE;
 
 public class ImageEditingActivity extends Activity {
     public static final String APP_IMAGE_DIRECTORY = "TessApp";
+    public static final String IMAGE_FILE = "imageFile";
     ImageView resultImageView;
     ImageView drawingImageView;
 
@@ -58,8 +62,8 @@ public class ImageEditingActivity extends Activity {
             @Override
             public void onClick(View v) {
                 button.setVisibility(View.GONE);
-                Point startPoint = getStartForCroppedBitmap();
-                Bitmap cropped = Bitmap.createBitmap(parentBitmap, startPoint.x, startPoint.y,
+                Point rectangleStartPoint = getStartForCroppedBitmap();
+                Bitmap cropped = Bitmap.createBitmap(parentBitmap, rectangleStartPoint.x, rectangleStartPoint.y,
                         Math.abs(startPoint.x - endPoint.x), Math.abs(startPoint.y - endPoint.y));
 
                 createImageFileFromCroppedBitmap(cropped);
@@ -69,20 +73,31 @@ public class ImageEditingActivity extends Activity {
         resultImageView = (ImageView) findViewById(R.id.result_image);
         drawingImageView = (ImageView) findViewById(R.id.drawing_pane);
 
-        Uri fileUri = getIntent().getParcelableExtra("imageFileUri");
+        Intent sourceIntent = getIntent();
+        Uri fileUri = sourceIntent.getParcelableExtra("imageFileUri");
+
 
         File imageFile = new File(fileUri.getPath());
         if (imageFile.exists()) {
             initializeDrawingComponents(imageFile);
         }
+
+        String toastMessage = sourceIntent.getStringExtra("toastMessage");
+        Toast.makeText(this, toastMessage, Toast.LENGTH_LONG).show();
     }
 
     private void createImageFileFromCroppedBitmap(Bitmap cropped) {
         File imagesDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
                 APP_IMAGE_DIRECTORY);
 
-        imagesDir.mkdirs();
-        String filename = "tess_" + System.currentTimeMillis() + ".jpg";
+        if (!imagesDir.exists()) {
+            imagesDir.mkdirs();
+        }
+
+        SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferencesConfig.PREFERENCE_KEY, 0);
+
+        String filename = sharedPreferences.getString(SharedPreferencesConfig.GOOGLE_USER_EMAIL, null)
+                + "_" + System.currentTimeMillis() + ".jpg";
         File destinationFile = new File(imagesDir, filename);
 
         try {
@@ -93,6 +108,11 @@ public class ImageEditingActivity extends Activity {
 
             saveImageToMediaStore(destinationFile);
             button.setOnClickListener(null);
+
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra(IMAGE_FILE, destinationFile);
+            setResult(RESULT_OK, returnIntent);
+            finish();
         } catch (Exception e) {
             Toast.makeText(this, "Failed to store images", Toast.LENGTH_LONG).show();
         }
@@ -171,7 +191,7 @@ public class ImageEditingActivity extends Activity {
         return x < 0 || y < 0 || x > view.getWidth() || y > view.getHeight();
     }
 
-    private Point getStartPoint(ImageView view, float x, float y) {
+    private Point getScaledPoint(ImageView view, float x, float y) {
         if (touchOutSideView(view, x, y)) {
             return null;
         } else {
@@ -193,14 +213,14 @@ public class ImageEditingActivity extends Activity {
                     if (button.getVisibility() == VISIBLE) {
                         button.setVisibility(View.INVISIBLE);
                     }
-                    startPoint = getStartPoint(imageView, x, y);
+                    startPoint = getScaledPoint(imageView, x, y);
                     break;
                 case MotionEvent.ACTION_MOVE:
                     drawOnCanvas(imageView, x, y);
                     break;
                 case MotionEvent.ACTION_UP:
                     drawOnCanvas(imageView, x, y);
-                    endPoint = getStartPoint(imageView, x, y);
+                    endPoint = getScaledPoint(imageView, x, y);
                     button.setVisibility(VISIBLE);
                     break;
             }

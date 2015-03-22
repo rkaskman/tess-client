@@ -17,7 +17,7 @@ import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.roman.ttu.client.Application;
 import com.roman.ttu.client.GoogleTokenRetriever;
-import com.roman.ttu.client.RestClient;
+import com.roman.ttu.client.rest.RestClient;
 import com.roman.ttu.client.SharedPreferencesConfig;
 import com.roman.ttu.client.service.AuthenticationAwareActivityCallback;
 

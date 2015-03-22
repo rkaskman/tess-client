@@ -1,4 +1,4 @@
-package com.roman.ttu.client.service;
+package com.roman.ttu.client.rest;
 
 import retrofit.Callback;
 import retrofit.http.POST;
