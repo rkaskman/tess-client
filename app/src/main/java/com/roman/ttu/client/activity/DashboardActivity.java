@@ -3,19 +3,25 @@ package com.roman.ttu.client.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 
 import com.example.TessClient.R;
 import com.roman.ttu.client.Application;
 
-public class DashboardActivity extends Activity {
+public class DashboardActivity extends AbstractActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((Application) getApplication()).getObjectGraph().inject(this);
-        setContentView(R.layout.dashboard_layout);
+        setContentView(R.layout.activity_dashboard);
+        initButtons();
+    }
+
+    private void initButtons() {
         Button cameraButton = (Button) findViewById(R.id.btn_camera);
 
         cameraButton.setOnClickListener(new View.OnClickListener() {
@@ -25,5 +31,13 @@ public class DashboardActivity extends Activity {
                 overridePendingTransition(R.animator.activity_fadein, R.animator.activity_fadeout);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 }

@@ -1,5 +1,6 @@
 package com.roman.ttu.client.rest;
 
+import com.google.common.collect.Collections2;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.OkHttpClient;
@@ -21,16 +22,15 @@ import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
 
 public class RestClient {
-    private static final String BASE_URL = "https://192.168.10.105:8999/";
-    private SignInService signInService;
-    private ImagePostingService imagePostingService;
+    private static final String BASE_URL = "https://192.168.1.72:8999/";
+    private RestAdapter restAdapter;
 
     public RestClient() {
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'")
                 .create();
 
-        RestAdapter restAdapter = new RestAdapter.Builder()
+        restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(BASE_URL)
                 .setConverter(new GsonConverter(gson))
@@ -40,18 +40,10 @@ public class RestClient {
         CookieManager cookieManager = new CookieManager();
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
         CookieHandler.setDefault(cookieManager);
-
-        signInService = restAdapter.create(SignInService.class);
-        imagePostingService = restAdapter.create(ImagePostingService.class);
     }
 
-
-    public SignInService getSignInService() {
-        return signInService;
-    }
-
-    public ImagePostingService getImagePostingService() {
-        return imagePostingService;
+    public <T> T create(Class<T> serviceClass) {
+        return restAdapter.create(serviceClass);
     }
 
     private OkClient getHttpClientForTestingPurposes() {

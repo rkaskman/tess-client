@@ -6,4 +6,5 @@
     <integer name="socketTimeout">10000</integer>
 
     <string name="db_camera_btn_text">Recognition</string>
+    <string name="auth_error">Authentication error occurred!</string>
 </resources>

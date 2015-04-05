@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.TessClient.R;
+import com.roman.ttu.client.Application;
+import com.roman.ttu.client.rest.ImagePostingService;
 import com.roman.ttu.client.util.IOUtil;
 import com.roman.ttu.client.rest.ImagesWrapper;
 import com.roman.ttu.client.service.AuthenticationAwareActivityCallback;
@@ -20,6 +22,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import javax.inject.Inject;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -38,10 +42,18 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
 
     private Uri fileUri;
 
+    long start;
+
+    private ImagePostingCallback imagePostingCallback = new ImagePostingCallback();
+
+    @Inject
+    ImagePostingService imagePostingService;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+        ((Application) getApplication()).getObjectGraph().inject(this);
+
         setContentView(R.layout.main);
         button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
@@ -92,7 +104,8 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
 
     private void postImagesForOcr() throws IOException {
         ImagesWrapper imagesWrapper = new ImagesWrapper(getImageWrapperFor(imageWithRegNumber), getImageWrapperFor(imageWithTotalCost));
-        restClient.getImagePostingService().postImages(imagesWrapper, imagesPostingCallBack);
+        start = System.currentTimeMillis();
+        imagePostingService.postImages(imagesWrapper, imagePostingCallback);
     }
 
     private ImageWrapper getImageWrapperFor(File imageFile) throws IOException {
@@ -128,9 +141,10 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
 
     }
 
-    AuthenticationAwareActivityCallback imagesPostingCallBack = new AuthenticationAwareActivityCallback(this) {
+    public class ImagePostingCallback extends AuthenticationAwareActivityCallback {
         @Override
         public void success(Object o, Response response) {
+            Log.i("timeTaken", String.valueOf(System.currentTimeMillis() - start));
             super.success(o, response);
         }
 
@@ -138,5 +152,5 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
         public void failure(RetrofitError error) {
             super.failure(error);
         }
-    };
+    }
 }

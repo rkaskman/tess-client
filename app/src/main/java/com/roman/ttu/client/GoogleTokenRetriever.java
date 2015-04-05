@@ -9,19 +9,20 @@ import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.roman.ttu.client.activity.AuthenticationAwareActivity;
+import com.roman.ttu.client.activity.StartActivity;
 
 import java.io.IOException;
 
 
 public class GoogleTokenRetriever extends AsyncTask<Void, Void, String> {
     private static final String TAG = "AuthTokenRetriever";
-    protected AuthenticationAwareActivity activity;
+    protected StartActivity activity;
 
     private static final String SCOPES = "oauth2:https://www.googleapis.com/auth/userinfo.profile";
     private OnTokenRetrievedAction onTokenRetrievedAction;
     protected String mEmail;
 
-    public GoogleTokenRetriever(AuthenticationAwareActivity activity, OnTokenRetrievedAction onTokenRetrievedAction,
+    public GoogleTokenRetriever(StartActivity activity, OnTokenRetrievedAction onTokenRetrievedAction,
                                 String email) {
         this.activity = activity;
         this.onTokenRetrievedAction = onTokenRetrievedAction;

@@ -1,25 +1,25 @@
 package com.roman.ttu.client.service;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
+import com.roman.ttu.client.ApplicationHolder;
+import com.roman.ttu.client.SharedPreferenceManager;
 
+import javax.inject.Inject;
 
-import com.roman.ttu.client.activity.AuthenticationAwareActivity;
-
+import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Header;
 import retrofit.client.Response;
 
-import static com.roman.ttu.client.SharedPreferencesConfig.PREFERENCE_KEY;
-import static com.roman.ttu.client.SharedPreferencesConfig.SESSION_EXPIRES_AT_KEY;
+import static com.roman.ttu.client.activity.AuthenticationAwareActivity.SESSION_EXPIRES_AT;
 
-public class AuthenticationAwareActivityCallback<T> extends SessionAwareCallback<T> {
-    private Activity activity;
+public class AuthenticationAwareActivityCallback<T> implements Callback<T> {
     private static final String EXPIRES_AT_HEADER_KEY = "expiresAt";
 
-    public AuthenticationAwareActivityCallback(AuthenticationAwareActivity activity) {
-        super(activity);
-        this.activity = activity;
+    @Inject
+    SharedPreferenceManager preferenceManager;
+
+    public AuthenticationAwareActivityCallback() {
+        ApplicationHolder.get().getObjectGraph().inject(this);
     }
 
     @Override
@@ -30,27 +30,19 @@ public class AuthenticationAwareActivityCallback<T> extends SessionAwareCallback
     private void updateSessionExpiryTime(Response response) {
         for (Header header : response.getHeaders()) {
             if (EXPIRES_AT_HEADER_KEY.equals(header.getName())) {
-                writeExpiryValueIntoSharedPreferences(header);
+                preferenceManager.save(SESSION_EXPIRES_AT, getSessionExpiresAtTime(header));
                 break;
             }
         }
     }
 
-    private void writeExpiryValueIntoSharedPreferences(Header header) {
-        SharedPreferences sharedPreferences = activity.getSharedPreferences(PREFERENCE_KEY, 0);
-        SharedPreferences.Editor edit = sharedPreferences.edit();
-
-        edit.putLong(SESSION_EXPIRES_AT_KEY, System.currentTimeMillis() + Long.parseLong(header.getValue()));
-        edit.commit();
+    private long getSessionExpiresAtTime(Header header) {
+        return System.currentTimeMillis() + Long.parseLong(header.getValue());
     }
 
     @Override
     public void failure(RetrofitError error) {
         final Throwable e = error.getCause();
-        handleNonAuthenticatedException(e);
-    }
-
-    private void handleNonAuthenticatedException(Throwable e) {
-        //TODO: start Login activity for result
+//        handleNonAuthenticatedException(e);
     }
 }

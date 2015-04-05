@@ -9,7 +9,8 @@ public class Application extends android.app.Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        objectGraph = ObjectGraph.create(new TessModule());
+        objectGraph = ObjectGraph.create(new TessModule(this));
+        ApplicationHolder.set(this);
     }
 
     public ObjectGraph getObjectGraph() {

@@ -53,7 +53,7 @@ public class ImageEditingActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.image_edit);
+        setContentView(R.layout.activity_image_edit);
 
         button = (Button) findViewById(R.id.save_picture_button);
         button.setVisibility(View.INVISIBLE);
