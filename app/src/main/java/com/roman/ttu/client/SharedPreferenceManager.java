@@ -5,6 +5,9 @@ import android.content.SharedPreferences;
 
 public class SharedPreferenceManager {
 
+    public static final String USER_NAME = "userName";
+    public static final String USER_ID = "userId";
+
     SharedPreferences sharedPreferences;
 
     public SharedPreferenceManager(Context context) {

@@ -7,4 +7,7 @@
 
     <string name="db_camera_btn_text">Recognition</string>
     <string name="auth_error">Authentication error occurred!</string>
+    <string name="no_connection_detected">No internet connection detected. Do you wish to save images for further processing?</string>
+    <string name="yes_button">Yes</string>
+    <string name="no_button">No</string>
 </resources>

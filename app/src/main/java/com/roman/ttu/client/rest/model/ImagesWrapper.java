@@ -1,4 +1,4 @@
-package com.roman.ttu.client.rest;
+package com.roman.ttu.client.rest.model;
 
 public class ImagesWrapper {
     public ImageWrapper regNumberImage;

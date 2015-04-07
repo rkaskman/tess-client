@@ -6,6 +6,7 @@ import android.content.Context;
 import com.roman.ttu.client.activity.DashboardActivity;
 import com.roman.ttu.client.activity.ReceiptPictureTakingActivity;
 import com.roman.ttu.client.activity.StartActivity;
+import com.roman.ttu.client.db.PendingImagesDAO;
 import com.roman.ttu.client.rest.ImagePostingService;
 import com.roman.ttu.client.rest.RestClient;
 import com.roman.ttu.client.rest.SignInService;
@@ -53,5 +54,11 @@ public class TessModule {
     @Singleton
     SharedPreferenceManager provideSharedPreferenceManager() {
         return new SharedPreferenceManager(context);
+    }
+
+    @Provides
+    @Singleton
+    PendingImagesDAO providePendingImagesDAO() {
+        return new PendingImagesDAO(context);
     }
 }

@@ -3,10 +3,7 @@ package com.roman.ttu.client.activity;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -22,7 +19,7 @@ import com.roman.ttu.client.Application;
 import com.roman.ttu.client.GoogleTokenRetriever;
 import com.roman.ttu.client.SharedPreferenceManager;
 import com.roman.ttu.client.rest.SignInService;
-import com.roman.ttu.client.rest.response.User;
+import com.roman.ttu.client.rest.model.User;
 import com.roman.ttu.client.service.AuthenticationAwareActivityCallback;
 
 import java.io.IOException;
@@ -32,6 +29,7 @@ import javax.inject.Inject;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+import static com.roman.ttu.client.SharedPreferenceManager.*;
 import static com.roman.ttu.client.SharedPreferencesConfig.GOOGLE_USER_EMAIL;
 
 public class StartActivity extends AbstractActivity {
@@ -41,8 +39,7 @@ public class StartActivity extends AbstractActivity {
     public static final int REQUEST_CODE_RECOVER_FROM_AUTH_ERROR = 1001;
     public static final int REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR = 1002;
 
-    private static final String USER_NAME = "userName";
-    private static final String USER_ID = "userId";
+
 
     @Inject
     SignInService signInService;
