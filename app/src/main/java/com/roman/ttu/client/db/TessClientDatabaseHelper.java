@@ -18,12 +18,12 @@ public class TessClientDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_USER_PENDING_IMAGES =
             "CREATE TABLE " + UserPendingImages.TABLE_NAME + " (" +
-                    UserPendingImages.COLUMN_NAME_ID + " INTEGER PRIMARY KEY," +
+                    UserPendingImages._ID + " INTEGER PRIMARY KEY," +
                     UserPendingImages.COLUMN_NAME_USER_ID + TEXT_TYPE + NOT_NULL + COMMA_SEP +
                     UserPendingImages.COLUMN_NAME_ENTERPRISE_ID_IMAGE + TEXT_TYPE + NOT_NULL + COMMA_SEP +
-                    UserPendingImages.COLUMN_NAME_ENTERPRISE_ID_FILE_NAME + TEXT_TYPE + NOT_NULL + COMMA_SEP +
+                    UserPendingImages.COLUMN_NAME_ENTERPRISE_ID_FILE_EXTENSION + TEXT_TYPE + NOT_NULL + COMMA_SEP +
                     UserPendingImages.COLUMN_NAME_TOTAL_COST_IMAGE + TEXT_TYPE + NOT_NULL + COMMA_SEP +
-                    UserPendingImages.COLUMN_NAME_TOTAL_COST_FILE_NAME + TEXT_TYPE + NOT_NULL + COMMA_SEP +
+                    UserPendingImages.COLUMN_NAME_TOTAL_COST_FILE_EXTENSION + TEXT_TYPE + NOT_NULL + COMMA_SEP +
                     UserPendingImages.COLUMN_NAME_INSERTED_AT + TIMESTAMP_TYPE +
                     " DEFAULT CURRENT_TIMESTAMP" + NOT_NULL + ");";
 

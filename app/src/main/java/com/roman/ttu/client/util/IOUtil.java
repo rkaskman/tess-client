@@ -1,6 +1,10 @@
 package com.roman.ttu.client.util;
 
+import android.text.TextUtils;
+
 import java.io.*;
+
+import static android.text.TextUtils.isEmpty;
 
 public class IOUtil {
 
@@ -18,5 +22,10 @@ public class IOUtil {
         } finally {
             f.close();
         }
+    }
+
+    public static String getFileExtension(String fileName) {
+        int extensionSeparatorIndex = fileName.lastIndexOf(".");
+        return !isEmpty(fileName) && extensionSeparatorIndex > 0 ? fileName.substring(extensionSeparatorIndex + 1) : null;
     }
 }

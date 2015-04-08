@@ -35,6 +35,7 @@ import retrofit.client.Response;
 import static com.roman.ttu.client.SharedPreferenceManager.USER_ID;
 import static com.roman.ttu.client.activity.ImageEditingActivity.IMAGE_FILE;
 import static com.roman.ttu.client.rest.model.ImagesWrapper.ImageWrapper;
+import static com.roman.ttu.client.util.IOUtil.getFileExtension;
 
 public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
@@ -131,7 +132,7 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
 
     private ImageWrapper getImageWrapperFor(File imageFile) throws IOException {
         String encodedImage = Base64.encodeToString(IOUtil.readFile(imageFile), Base64.DEFAULT);
-        return new ImageWrapper(encodedImage, imageFile.getName());
+        return new ImageWrapper(encodedImage, getFileExtension(imageFile.getName()));
     }
 
     private static Uri getOutputMediaFileUri(int type) {
