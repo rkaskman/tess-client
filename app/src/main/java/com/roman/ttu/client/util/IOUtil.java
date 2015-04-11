@@ -28,4 +28,10 @@ public class IOUtil {
         int extensionSeparatorIndex = fileName.lastIndexOf(".");
         return !isEmpty(fileName) && extensionSeparatorIndex > 0 ? fileName.substring(extensionSeparatorIndex + 1) : null;
     }
+
+    public static void deleteFile(File f) {
+        if(f != null && f.exists()) {
+            f.delete();
+        }
+    }
 }

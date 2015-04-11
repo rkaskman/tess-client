@@ -25,4 +25,17 @@
         <item name="android:orientation">horizontal</item>
         <item name="android:background">#dedede</item>
     </style>
+
+    <style name="BottomActionButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">@dimen/spacing_medium</item>
+        <item name="android:layout_marginRight">@dimen/spacing_medium</item>
+        <item name="android:layout_marginBottom">@dimen/spacing_medium</item>
+        <item name="android:background">#ffeeeeee</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">#ff373737</item>
+        <item name="android:paddingBottom">@dimen/spacing_minor</item>
+        <item name="android:paddingTop">@dimen/spacing_minor</item>
+    </style>
 </resources>

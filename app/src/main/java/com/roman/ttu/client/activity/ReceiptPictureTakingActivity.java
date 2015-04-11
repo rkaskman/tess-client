@@ -11,11 +11,11 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.TessClient.R;
 import com.roman.ttu.client.Application;
-import com.roman.ttu.client.SharedPreferenceManager;
 import com.roman.ttu.client.db.PendingImagesDAO;
 import com.roman.ttu.client.rest.ImagePostingService;
 import com.roman.ttu.client.util.IOUtil;
@@ -41,15 +41,34 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
     private static final int EDIT_IMAGE = 7001;
     public static final int MEDIA_TYPE_IMAGE = 1;
-    private Button button;
+    public static final int REQUEST_CODE_POST_IMAGES_LOGIN = 12345;
+    public static final String IMAGE_PREFIX = "IMG_";
+    public static final String IMAGE_EXTENSION = ".jpg";
+    private Button goButton;
+    private Button takeImagesAgainButton;
 
     private File imageWithRegNumber;
     private File imageWithTotalCost;
 
+    private File firstImage;
+    private File secondImage;
+
+    private Uri firstImageUri;
+    private Uri secondImageUri;
+
+    private ImagesWrapper imagesWrapper;
+
+    private View startView;
+    private View sendingView;
+    private View successView;
+
+    private enum Phase {
+        START, SENDING, SUCCESS, ERROR
+    }
+
     @Inject
     PendingImagesDAO pendingImagesDAO;
 
-    private Uri fileUri;
     private ImagePostingCallback imagePostingCallback = new ImagePostingCallback();
 
     @Inject
@@ -60,9 +79,21 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
         super.onCreate(savedInstanceState);
         ((Application) getApplication()).getObjectGraph().inject(this);
 
-        setContentView(R.layout.main);
-        button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
+        setContentView(R.layout.activity_receipt_pic_taking);
+        initLayoutElements();
+        setPhase(Phase.START);
+
+
+        takeImagesAgainButton = (Button)findViewById(R.id.take_images_again_button);
+        takeImagesAgainButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setPhase(Phase.START);
+            }
+        });
+
+        goButton = (Button) findViewById(R.id.proceed_to_images_taking_button);
+        goButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 imageWithRegNumber = null;
@@ -72,29 +103,68 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
         });
     }
 
+    private void initLayoutElements() {
+        startView = findViewById(R.id.receipt_pic_taking_start_stage);
+        sendingView = findViewById(R.id.receipt_pic_taking_sending_stage);
+        successView = findViewById(R.id.receipt_pic_taking_success_stage);
+    }
+
     private void startCamera() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+        if (imageWithRegNumber == null) {
+            firstImage = getOutputMediaFile();
+            firstImageUri = getOutputMediaFileUri(firstImage);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, firstImageUri);
+
+        } else {
+            secondImage = getOutputMediaFile();
+            secondImageUri = getOutputMediaFileUri(secondImage);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, secondImageUri);
+        }
+
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            Intent imageEditingIntent = new Intent(this, ImageEditingActivity.class);
-            imageEditingIntent.putExtra("imageFileUri", fileUri);
-            imageEditingIntent.putExtra("toastMessage",
-                    imageWithRegNumber == null ? "Mark registration number" : "Mark total cost");
-            startActivityForResult(imageEditingIntent, EDIT_IMAGE);
-        } else if (requestCode == EDIT_IMAGE && resultCode == RESULT_OK) {
-            File editedImageFile = (File) intent.getSerializableExtra(IMAGE_FILE);
-            try {
-                resolveEditedImage(editedImageFile);
-            } catch (IOException e) {
-                Toast.makeText(this, "Failed to read image files", Toast.LENGTH_LONG).show();
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if(resultCode == RESULT_OK) {
+                editImage();
+            } else {
+                clearFiles();
             }
         }
+
+        if (requestCode == EDIT_IMAGE && resultCode == RESULT_OK) {
+            if(resultCode == RESULT_OK) {
+                File editedImageFile = (File) intent.getSerializableExtra(IMAGE_FILE);
+                try {
+                    resolveEditedImage(editedImageFile);
+                } catch (IOException e) {
+                    Toast.makeText(this, "Failed to read image files", Toast.LENGTH_LONG).show();
+                }
+            } else {
+                clearFiles();
+            }
+        }
+
+        if (requestCode == REQUEST_CODE_POST_IMAGES_LOGIN) {
+            if (resultCode == RESULT_OK) {
+                setPhase(Phase.SENDING);
+                imagePostingService.postImages(imagesWrapper, imagePostingCallback);
+            } else if (resultCode == RESULT_CANCELED) {
+                finishActivityAndShowAuthError();
+            }
+        }
+    }
+
+    private void editImage() {
+        Intent imageEditingIntent = new Intent(this, ImageEditingActivity.class);
+        imageEditingIntent.putExtra("imageFileUri", imageWithRegNumber == null ? firstImageUri : secondImageUri);
+        imageEditingIntent.putExtra("toastMessage",
+                imageWithRegNumber == null ? "Mark registration number" : "Mark total cost");
+        startActivityForResult(imageEditingIntent, EDIT_IMAGE);
     }
 
     private void resolveEditedImage(File editedImageFile) throws IOException {
@@ -109,13 +179,26 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
     }
 
     private void processImages() throws IOException {
-        final ImagesWrapper imagesWrapper = new ImagesWrapper(getImageWrapperFor(imageWithRegNumber), getImageWrapperFor(imageWithTotalCost));
+        imagesWrapper = new ImagesWrapper(getImageWrapperFor(imageWithRegNumber),
+                getImageWrapperFor(imageWithTotalCost));
 
         if (isDeviceOnline()) {
-            imagePostingService.postImages(imagesWrapper, imagePostingCallback);
+            if (!sessionExpired()) {
+                setPhase(Phase.SENDING);
+                imagePostingService.postImages(imagesWrapper, imagePostingCallback);
+            } else {
+                Intent loginIntent = new Intent(ReceiptPictureTakingActivity.this, StartActivity.class);
+                startActivityForResult(loginIntent, REQUEST_CODE_POST_IMAGES_LOGIN);
+            }
         } else {
             proposeToSaveImages(imagesWrapper);
         }
+    }
+
+    private void setPhase(Phase phase) {
+        startView.setVisibility(phase == Phase.START ? View.VISIBLE : View.GONE);
+        sendingView.setVisibility(phase == Phase.SENDING ? View.VISIBLE : View.GONE);
+        successView.setVisibility(phase == Phase.SUCCESS ? View.VISIBLE : View.GONE);
     }
 
     private void proposeToSaveImages(final ImagesWrapper imagesWrapper) {
@@ -124,10 +207,23 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
                 .setPositiveButton(getString(R.string.yes_button), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         pendingImagesDAO.save(imagesWrapper, preferenceManager.getString(USER_ID));
+                        proceedToSuccessStage(true);
                     }
                 })
-                .setNegativeButton(getString(R.string.no_button), null)
+                .setNegativeButton(getString(R.string.no_button), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        clearFiles();
+                    }
+                })
                 .show();
+    }
+
+    private void proceedToSuccessStage(boolean imagesSaved) {
+        setPhase(Phase.SUCCESS);
+        TextView imagesProceededView  = (TextView)successView.findViewById(R.id.images_successfully_proceeded_info);
+        imagesProceededView.setText(getString(imagesSaved ? R.string.images_saved_successfully : R.string.images_sent_successfully));
+        clearFiles();
     }
 
     private ImageWrapper getImageWrapperFor(File imageFile) throws IOException {
@@ -135,20 +231,14 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
         return new ImageWrapper(encodedImage, getFileExtension(imageFile.getName()));
     }
 
-    private static Uri getOutputMediaFileUri(int type) {
-        return Uri.fromFile(getOutputMediaFile(type));
+    private Uri getOutputMediaFileUri(File f) {
+        return Uri.fromFile(f);
     }
 
-    private static File getOutputMediaFile(int type) {
-        // To be safe, you should check that the SDCard is mounted
-        // using Environment.getExternalStorageState() before doing this.
-
+    private File getOutputMediaFile() {
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES), "TessClient");
-        // This location works best if you want the created images to be shared
-        // between applications and persist after your app has been uninstalled.
 
-        // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
                 Log.d("TessClient", "failed to create directory");
@@ -156,18 +246,33 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
             }
         }
 
-        // Create a media file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         return new File(mediaStorageDir.getPath() + File.separator +
-                "IMG_" + timeStamp + ".jpg");
+                IMAGE_PREFIX + timeStamp + IMAGE_EXTENSION);
+    }
 
+    private void clearFiles() {
+        deleteFileAndSetNull(firstImage);
+        deleteFileAndSetNull(secondImage);
+        deleteFileAndSetNull(imageWithRegNumber);
+        deleteFileAndSetNull(imageWithTotalCost);
+
+        firstImageUri = null;
+        secondImageUri = null;
+    }
+
+    private void deleteFileAndSetNull(File file) {
+        IOUtil.deleteFile(file);
+        file = null;
     }
 
     public class ImagePostingCallback extends AuthenticationAwareActivityCallback {
         @Override
         public void success(Object o, Response response) {
             super.success(o, response);
+            proceedToSuccessStage(false);
         }
+
 
         @Override
         public void failure(RetrofitError error) {

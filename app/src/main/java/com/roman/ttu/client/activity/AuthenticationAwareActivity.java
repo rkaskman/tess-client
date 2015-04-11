@@ -22,13 +22,16 @@ public abstract class AuthenticationAwareActivity extends AbstractActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (preferenceManager.hasPreference(GOOGLE_USER_EMAIL) && shouldAuthenticate()) {
-            Intent intent = new Intent(AuthenticationAwareActivity.this, StartActivity.class);
-            startActivityForResult(intent, StartActivity.REQUEST_AUTH_CODE);
+        if (preferenceManager.hasPreference(GOOGLE_USER_EMAIL) && sessionExpired()) {
+            if(isDeviceOnline()) {
+                Intent intent = new Intent(AuthenticationAwareActivity.this, StartActivity.class);
+                startActivityForResult(intent, StartActivity.REQUEST_AUTH_CODE);
+            }
         }
     }
 
-    protected boolean shouldAuthenticate() {
+
+    protected boolean sessionExpired() {
         return getSessionRenewalTime() < System.currentTimeMillis();
     }
 
@@ -40,8 +43,12 @@ public abstract class AuthenticationAwareActivity extends AbstractActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == StartActivity.REQUEST_AUTH_CODE && resultCode == Activity.RESULT_CANCELED) {
-            startActivity(new Intent(AuthenticationAwareActivity.this, AuthErrorActivity.class));
-            finish();
+            finishActivityAndShowAuthError();
         }
+    }
+
+    protected void finishActivityAndShowAuthError() {
+        startActivity(new Intent(this, AuthErrorActivity.class));
+        finish();
     }
 }

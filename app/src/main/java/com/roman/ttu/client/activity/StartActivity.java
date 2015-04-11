@@ -39,8 +39,6 @@ public class StartActivity extends AbstractActivity {
     public static final int REQUEST_CODE_RECOVER_FROM_AUTH_ERROR = 1001;
     public static final int REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR = 1002;
 
-
-
     @Inject
     SignInService signInService;
 
@@ -81,7 +79,10 @@ public class StartActivity extends AbstractActivity {
 
     protected void establishSessionIfExpired() throws IOException, GoogleAuthException {
         if (!isDeviceOnline()) {
-            Toast.makeText(this, "Device is not online", Toast.LENGTH_LONG).show();
+            if(preferenceManager.hasPreference(GOOGLE_USER_EMAIL)) {
+//                Intent intent = new Intent();
+//                intent.putExtra()
+            }
             return;
         } else {
             new GoogleTokenRetriever(this, tokenRetrievalCallback,
@@ -146,8 +147,8 @@ public class StartActivity extends AbstractActivity {
     }
 
     private void saveUser(User user) {
-        preferenceManager.save(USER_NAME, user.userName);
-        preferenceManager.save(USER_ID, user.userName);
+        preferenceManager.save(USER_NAME, user.name);
+        preferenceManager.save(USER_ID, user.userId);
     }
 
     private void finishWithError() {

@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/FooterBar" >
-    <TextView android:text="by Roman Kaskman"
-        android:layout_width="fill_parent"
+    <TextView
+        android:id="@+id/footer_textview"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#606060"
+        android:layout_centerInParent="true"
         android:gravity="center"
-        android:paddingTop="10dip"/>
-</LinearLayout>
+        android:padding="@dimen/spacing_minor"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_minor"
+        android:layout_toLeftOf="@id/footer_textview"
+        android:src="@drawable/ic_account_circle_black_24dp"
+        />
+</RelativeLayout>

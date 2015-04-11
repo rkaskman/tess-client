@@ -7,9 +7,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.TessClient.R;
 import com.roman.ttu.client.Application;
+
+import static com.roman.ttu.client.SharedPreferenceManager.USER_NAME;
 
 public class DashboardActivity extends AbstractActivity {
 
@@ -18,6 +21,8 @@ public class DashboardActivity extends AbstractActivity {
         super.onCreate(savedInstanceState);
         ((Application) getApplication()).getObjectGraph().inject(this);
         setContentView(R.layout.activity_dashboard);
+        TextView footerTextView = (TextView) findViewById(R.id.footer_textview);
+        footerTextView.setText(preferenceManager.getString(USER_NAME));
         initButtons();
     }
 

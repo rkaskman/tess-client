@@ -13,6 +13,8 @@ import javax.inject.Inject;
 
 public abstract class AbstractActivity extends Activity {
 
+    public static final String NO_CONNECTION_SESSION = "noConnectionSession";
+
     @Inject
     SharedPreferenceManager preferenceManager;
 

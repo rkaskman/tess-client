@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/spacing_medium"
+    android:paddingRight="@dimen/spacing_medium">
+
+
+    <RelativeLayout
+        android:id="@+id/receipt_pic_taking_start_stage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/image_taking_explanation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:gravity="center"
+            android:text="@string/image_taking_explanation"
+            android:textSize="@dimen/text_size_medium" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/image_taking_explanation"
+            android:layout_marginTop="@dimen/spacing_xlarge"
+            android:src="@drawable/ic_center_focus_strong_white_48dp"
+            />
+
+        <Button
+            android:id="@+id/proceed_to_images_taking_button"
+            style="@style/BottomActionButton"
+            android:layout_alignParentBottom="true"
+            android:text="Go" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/receipt_pic_taking_sending_stage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_marginTop="@dimen/spacing_xlarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/sending_images_info"
+            android:src="@drawable/ic_send_white_48dp"/>
+
+        <TextView
+            android:id="@+id/sending_images_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:gravity="center"
+            android:text="@string/sending_images"
+            android:textSize="@dimen/text_size_medium" />
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:paddingBottom="16dp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/receipt_pic_taking_success_stage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_marginTop="@dimen/spacing_xlarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/images_successfully_proceeded_info"
+            android:src="@drawable/ic_done_white_48dp"/>
+
+        <TextView
+            android:id="@+id/images_successfully_proceeded_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:gravity="center"
+            android:textSize="@dimen/text_size_medium" />
+
+        <Button
+            android:id="@+id/take_images_again_button"
+            style="@style/BottomActionButton"
+            android:layout_alignParentBottom="true"
+            android:text="@string/take_new_pictures" />
+
+    </RelativeLayout>
+</RelativeLayout>

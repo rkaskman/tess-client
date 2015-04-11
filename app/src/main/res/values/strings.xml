@@ -10,4 +10,12 @@
     <string name="no_connection_detected">No internet connection detected. Do you wish to save images for further processing?</string>
     <string name="yes_button">Yes</string>
     <string name="no_button">No</string>
+    <string name="image_taking_explanation">Take two pictures: first of the enterprise registration number, second of purchase total cost</string>
+    <string name="images_taking_succeeded">Images taking succeeded</string>
+    <string name="sending_images">Sending images...</string>
+    <string name="take_new_pictures">Take new pictures</string>
+    <string name="images_sent_successfully">Images sent successfully. You will be notified as soon as the images are processed.</string>
+    <string name="images_saved_successfully">Images saved successfully.
+        You will be able to send the to the server if you have internet connection.</string>
+    <string name="logged_in_as">Logged in as: </string>
 </resources>

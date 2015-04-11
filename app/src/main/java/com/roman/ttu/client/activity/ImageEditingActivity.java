@@ -168,7 +168,7 @@ public class ImageEditingActivity extends Activity {
 
     private void initializePaint() {
         paint = new Paint();
-        paint.setColor(Color.RED);
+        paint.setColor(Color.parseColor("#8ffe09"));
         paint.setStrokeWidth(15);
         paint.setStyle(Paint.Style.STROKE);
     }
