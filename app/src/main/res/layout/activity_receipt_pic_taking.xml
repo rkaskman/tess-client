@@ -99,4 +99,56 @@
             android:text="@string/take_new_pictures" />
 
     </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/receipt_pic_taking_tech_error"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_marginTop="@dimen/spacing_xlarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/image_posting_tech_error_text"
+            android:src="@drawable/ic_error_white_48dp"/>
+
+        <TextView
+            android:id="@+id/image_posting_tech_error_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:gravity="center"
+            android:text="@string/tech_error_posting_images"
+            android:textSize="@dimen/text_size_medium" />
+
+        <LinearLayout
+            android:id="@+id/button_bottom"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_marginBottom="@dimen/spacing_medium"
+            android:layout_alignParentBottom="true">
+        <Button
+            android:id="@+id/button_save"
+            android:background="@color/button_background_primary"
+            android:textColor="@color/button_text_color_primary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginRight="@dimen/spacing_micro"
+            android:text="@string/save_images">
+        </Button>
+        <Button
+            android:id="@+id/button_retry_send"
+            android:background="@color/button_background_primary"
+            android:textColor="@color/button_text_color_primary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/spacing_micro"
+            android:layout_weight="1"
+            android:text="@string/retry_sending_images">
+        </Button>
+        </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>

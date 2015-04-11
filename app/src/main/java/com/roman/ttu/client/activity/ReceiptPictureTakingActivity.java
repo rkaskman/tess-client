@@ -44,8 +44,11 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
     public static final int REQUEST_CODE_POST_IMAGES_LOGIN = 12345;
     public static final String IMAGE_PREFIX = "IMG_";
     public static final String IMAGE_EXTENSION = ".jpg";
+
     private Button goButton;
     private Button takeImagesAgainButton;
+    private Button saveButton;
+    private Button retrySendButton;
 
     private File imageWithRegNumber;
     private File imageWithTotalCost;
@@ -61,6 +64,7 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
     private View startView;
     private View sendingView;
     private View successView;
+    private View errorView;
 
     private enum Phase {
         START, SENDING, SUCCESS, ERROR
@@ -81,10 +85,12 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
 
         setContentView(R.layout.activity_receipt_pic_taking);
         initLayoutElements();
+        initButtons();
         setPhase(Phase.START);
+    }
 
-
-        takeImagesAgainButton = (Button)findViewById(R.id.take_images_again_button);
+    private void initButtons() {
+        takeImagesAgainButton = (Button) findViewById(R.id.take_images_again_button);
         takeImagesAgainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,12 +107,34 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
                 startCamera();
             }
         });
+
+        saveButton = (Button) findViewById(R.id.button_save);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveImages();
+            }
+        });
+
+        retrySendButton = (Button) findViewById(R.id.button_retry_send);
+        retrySendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendImages();
+            }
+        });
+    }
+
+    private void saveImages() {
+        pendingImagesDAO.save(imagesWrapper, preferenceManager.getString(USER_ID));
+        proceedToSuccessStage(true);
     }
 
     private void initLayoutElements() {
         startView = findViewById(R.id.receipt_pic_taking_start_stage);
         sendingView = findViewById(R.id.receipt_pic_taking_sending_stage);
         successView = findViewById(R.id.receipt_pic_taking_success_stage);
+        errorView = findViewById(R.id.receipt_pic_taking_tech_error);
     }
 
     private void startCamera() {
@@ -129,7 +157,7 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-            if(resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 editImage();
             } else {
                 clearFiles();
@@ -137,7 +165,7 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
         }
 
         if (requestCode == EDIT_IMAGE && resultCode == RESULT_OK) {
-            if(resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 File editedImageFile = (File) intent.getSerializableExtra(IMAGE_FILE);
                 try {
                     resolveEditedImage(editedImageFile);
@@ -183,15 +211,19 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
                 getImageWrapperFor(imageWithTotalCost));
 
         if (isDeviceOnline()) {
-            if (!sessionExpired()) {
-                setPhase(Phase.SENDING);
-                imagePostingService.postImages(imagesWrapper, imagePostingCallback);
-            } else {
-                Intent loginIntent = new Intent(ReceiptPictureTakingActivity.this, StartActivity.class);
-                startActivityForResult(loginIntent, REQUEST_CODE_POST_IMAGES_LOGIN);
-            }
+            sendImages();
         } else {
-            proposeToSaveImages(imagesWrapper);
+            proposeToSaveImages();
+        }
+    }
+
+    private void sendImages() {
+        if (!sessionExpired()) {
+            setPhase(Phase.SENDING);
+            imagePostingService.postImages(imagesWrapper, imagePostingCallback);
+        } else {
+            Intent loginIntent = new Intent(ReceiptPictureTakingActivity.this, StartActivity.class);
+            startActivityForResult(loginIntent, REQUEST_CODE_POST_IMAGES_LOGIN);
         }
     }
 
@@ -199,15 +231,15 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
         startView.setVisibility(phase == Phase.START ? View.VISIBLE : View.GONE);
         sendingView.setVisibility(phase == Phase.SENDING ? View.VISIBLE : View.GONE);
         successView.setVisibility(phase == Phase.SUCCESS ? View.VISIBLE : View.GONE);
+        errorView.setVisibility(phase == Phase.ERROR ? View.VISIBLE : View.GONE);
     }
 
-    private void proposeToSaveImages(final ImagesWrapper imagesWrapper) {
+    private void proposeToSaveImages() {
         new AlertDialog.Builder(this)
                 .setMessage(getString(R.string.no_connection_detected))
                 .setPositiveButton(getString(R.string.yes_button), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        pendingImagesDAO.save(imagesWrapper, preferenceManager.getString(USER_ID));
-                        proceedToSuccessStage(true);
+                       saveImages();
                     }
                 })
                 .setNegativeButton(getString(R.string.no_button), new DialogInterface.OnClickListener() {
@@ -221,7 +253,7 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
 
     private void proceedToSuccessStage(boolean imagesSaved) {
         setPhase(Phase.SUCCESS);
-        TextView imagesProceededView  = (TextView)successView.findViewById(R.id.images_successfully_proceeded_info);
+        TextView imagesProceededView = (TextView) successView.findViewById(R.id.images_successfully_proceeded_info);
         imagesProceededView.setText(getString(imagesSaved ? R.string.images_saved_successfully : R.string.images_sent_successfully));
         clearFiles();
     }
@@ -252,18 +284,18 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
     }
 
     private void clearFiles() {
-        deleteFileAndSetNull(firstImage);
-        deleteFileAndSetNull(secondImage);
-        deleteFileAndSetNull(imageWithRegNumber);
-        deleteFileAndSetNull(imageWithTotalCost);
+        IOUtil.deleteFile(firstImage);
+        IOUtil.deleteFile(secondImage);
+        IOUtil.deleteFile(imageWithRegNumber);
+        IOUtil.deleteFile(imageWithTotalCost);
+
+        firstImage = null;
+        secondImage = null;
+        imageWithRegNumber = null;
+        imageWithTotalCost = null;
 
         firstImageUri = null;
         secondImageUri = null;
-    }
-
-    private void deleteFileAndSetNull(File file) {
-        IOUtil.deleteFile(file);
-        file = null;
     }
 
     public class ImagePostingCallback extends AuthenticationAwareActivityCallback {
@@ -273,10 +305,10 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
             proceedToSuccessStage(false);
         }
 
-
         @Override
         public void failure(RetrofitError error) {
             super.failure(error);
+            setPhase(Phase.ERROR);
         }
     }
 }

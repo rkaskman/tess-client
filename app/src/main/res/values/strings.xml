@@ -16,6 +16,9 @@
     <string name="take_new_pictures">Take new pictures</string>
     <string name="images_sent_successfully">Images sent successfully. You will be notified as soon as the images are processed.</string>
     <string name="images_saved_successfully">Images saved successfully.
-        You will be able to send the to the server if you have internet connection.</string>
+        You will be able to send them to the server if you have internet connection.</string>
     <string name="logged_in_as">Logged in as: </string>
+    <string name="tech_error_posting_images">A technical error occurred while posting images</string>
+    <string name="save_images">Save images</string>
+    <string name="retry_sending_images">Retry</string>
 </resources>
