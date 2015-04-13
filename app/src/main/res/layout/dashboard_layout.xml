@@ -8,6 +8,12 @@
     <Button
         android:id="@+id/btn_camera"
         style="@style/DashboardButton"
-        android:drawableTop="@drawable/camera_button"
+        android:drawableTop="@drawable/button_camera"
         android:text="@string/db_camera_btn_text" />
+
+    <Button android:id="@+id/btn_list_expenses"
+        style="@style/DashboardButton"
+        android:drawableTop="@drawable/button_list_expenses"
+        android:text="@string/list_expenses"
+        />
 </com.roman.ttu.client.layout.DashboardLayout>

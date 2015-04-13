@@ -28,7 +28,6 @@ public class DashboardActivity extends AbstractActivity {
 
     private void initButtons() {
         Button cameraButton = (Button) findViewById(R.id.btn_camera);
-
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -36,6 +35,9 @@ public class DashboardActivity extends AbstractActivity {
                 overridePendingTransition(R.animator.activity_fadein, R.animator.activity_fadeout);
             }
         });
+
+        Button listExpensesButton = (Button) findViewById(R.id.btn_list_expenses);
+
     }
 
     @Override
