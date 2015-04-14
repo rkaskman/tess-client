@@ -7,6 +7,7 @@ import com.roman.ttu.client.activity.DashboardActivity;
 import com.roman.ttu.client.activity.ReceiptPictureTakingActivity;
 import com.roman.ttu.client.activity.StartActivity;
 import com.roman.ttu.client.db.PendingImagesDAO;
+import com.roman.ttu.client.rest.ExpenseService;
 import com.roman.ttu.client.rest.ImagePostingService;
 import com.roman.ttu.client.rest.RestClient;
 import com.roman.ttu.client.rest.SignInService;
@@ -60,5 +61,11 @@ public class TessModule {
     @Singleton
     PendingImagesDAO providePendingImagesDAO() {
         return new PendingImagesDAO(context);
+    }
+
+    @Provides
+    @Singleton
+    ExpenseService provideExpensesService(RestClient restClient) {
+        return restClient.create(ExpenseService.class);
     }
 }

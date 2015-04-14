@@ -6,7 +6,7 @@
     android:background="#1c1c19">
 
     <Button
-        android:id="@+id/btn_camera"
+        android:id="@+id/btn_camera_recognition"
         style="@style/DashboardButton"
         android:drawableTop="@drawable/button_camera"
         android:text="@string/db_camera_btn_text" />

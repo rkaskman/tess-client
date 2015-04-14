@@ -26,10 +26,11 @@ public abstract class AuthenticationAwareActivity extends AbstractActivity {
             if(isDeviceOnline()) {
                 Intent intent = new Intent(AuthenticationAwareActivity.this, StartActivity.class);
                 startActivityForResult(intent, StartActivity.REQUEST_AUTH_CODE);
+            } else {
+
             }
         }
     }
-
 
     protected boolean sessionExpired() {
         return getSessionRenewalTime() < System.currentTimeMillis();

@@ -1,6 +1,5 @@
 package com.roman.ttu.client.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -27,7 +26,7 @@ public class DashboardActivity extends AbstractActivity {
     }
 
     private void initButtons() {
-        Button cameraButton = (Button) findViewById(R.id.btn_camera);
+        Button cameraButton = (Button) findViewById(R.id.btn_camera_recognition);
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -37,7 +36,13 @@ public class DashboardActivity extends AbstractActivity {
         });
 
         Button listExpensesButton = (Button) findViewById(R.id.btn_list_expenses);
-
+        listExpensesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DashboardActivity.this, ExpenseListActivity.class));
+                overridePendingTransition(R.animator.activity_fadein, R.animator.activity_fadeout);
+            }
+        });
     }
 
     @Override
