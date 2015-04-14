@@ -55,7 +55,7 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
         startDateArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePickerFragment startDatePicker = getStartDatePicker();
+                DatePickerFragment startDatePicker = getDatePickerFor(startDate, startDateTextView);
                 startDatePicker.show(getFragmentManager(), "startDatePicker");
             }
         });
@@ -63,46 +63,27 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
         endDateArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePickerFragment endDatePicker = getEndDatePicker();
+                DatePickerFragment endDatePicker = getDatePickerFor(endDate, endDateTextView);
                 endDatePicker.show(getFragmentManager(), "endDatePicker");
             }
         });
     }
 
-    private DatePickerFragment getStartDatePicker() {
-       return new DatePickerFragment() {
-            @Override
-            public Dialog onCreateDialog(Bundle savedInstanceState) {
-                return new DatePickerDialog(getActivity(), this, startDate.get(Calendar.YEAR),
-                        startDate.get(Calendar.MONTH), startDate.get(Calendar.DAY_OF_MONTH));
-            }
-
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                startDate.set(Calendar.YEAR, year);
-                startDate.set(Calendar.MONTH, monthOfYear);
-                startDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-                startDateTextView.setText(DATE_FORMAT.format(startDate));
-            }
-        };
-    }
-
-    private DatePickerFragment getEndDatePicker() {
+    private DatePickerFragment getDatePickerFor(final Calendar cal, final TextView dateText) {
         return new DatePickerFragment() {
             @Override
             public Dialog onCreateDialog(Bundle savedInstanceState) {
-                return new DatePickerDialog(getActivity(), this, endDate.get(Calendar.YEAR),
-                        endDate.get(Calendar.MONTH), endDate.get(Calendar.DAY_OF_MONTH));
+                return new DatePickerDialog(getActivity(), this, cal.get(Calendar.YEAR),
+                        cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
             }
 
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                endDate.set(Calendar.YEAR, year);
-                endDate.set(Calendar.MONTH, monthOfYear);
-                endDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                cal.set(Calendar.YEAR, year);
+                cal.set(Calendar.MONTH, monthOfYear);
+                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                endDateTextView.setText(DATE_FORMAT.format(endDate));
+                dateText.setText(DATE_FORMAT.format(endDate));
             }
         };
     }
