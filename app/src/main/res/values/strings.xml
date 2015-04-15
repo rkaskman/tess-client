@@ -22,4 +22,5 @@
     <string name="save_images">Save images</string>
     <string name="retry_sending_images">Retry</string>
     <string name="list_expenses">Show expenses</string>
+    <string name="find">Find</string>
 </resources>

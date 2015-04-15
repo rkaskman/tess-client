@@ -38,4 +38,9 @@
         <item name="android:paddingBottom">@dimen/spacing_minor</item>
         <item name="android:paddingTop">@dimen/spacing_minor</item>
     </style>
+
+    <style name="ExpensePrice">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@color/light_red</item>
+    </style>
 </resources>
