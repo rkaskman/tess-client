@@ -18,11 +18,16 @@
 
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.roman.ttu.client.activity.DashboardActivity" />
 
         <activity android:name="com.roman.ttu.client.activity.ReceiptPictureTakingActivity" android:screenOrientation="portrait" />
         <activity android:name="com.roman.ttu.client.activity.ImageEditingActivity" android:screenOrientation="portrait"/>
         <activity android:name="com.roman.ttu.client.activity.AuthErrorActivity" android:theme="@android:style/Theme.Material.NoActionBar"/>
-        <activity android:name="com.roman.ttu.client.activity.ExpenseListActivity" android:theme="@android:style/Theme.Material.NoActionBar"/>
+        <activity android:name="com.roman.ttu.client.activity.ExpenseListActivity"
+            android:parentActivityName="com.roman.ttu.client.activity.DashboardActivity"
+            />
 
         <activity android:name="com.roman.ttu.client.activity.StartActivity" android:theme="@android:style/Theme.Material.NoActionBar">
             <intent-filter>

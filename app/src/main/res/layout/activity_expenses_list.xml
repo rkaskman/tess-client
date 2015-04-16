@@ -9,64 +9,108 @@
     android:layout_marginTop="@dimen/spacing_xlarge"
     android:orientation="vertical">
 
+
     <RelativeLayout
         android:id="@+id/date_chooser"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="64dp"
         android:layout_alignParentTop="true"
-        android:padding="@dimen/spacing_micro">
+        android:padding="@dimen/spacing_micro"
+      >
 
         <TextView
             android:id="@+id/from"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:padding="@dimen/spacing_micro"
+            android:textSize="@dimen/text_size_medium"
+            android:paddingBottom="@dimen/spacing_micro"
+            android:paddingRight="@dimen/spacing_micro"
+            android:paddingLeft="@dimen/spacing_micro"
             android:text="From" />
+
+        <View
+            android:id="@+id/error_line"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/spacing_micro"
+            android:layout_below="@id/from"
+            android:background="@android:color/darker_gray"
+            android:visibility="visible"
+
+            />
+
+        <TextView
+            android:id="@+id/error_text"
+            android:layout_below="@id/error_line"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_micro"
+            android:textSize="@dimen/text_size_small"
+            android:text="Start date cannot be after end date"
+            android:textColor="@color/red_error"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/from_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/from"
-            android:padding="@dimen/spacing_micro" />
+            android:textSize="@dimen/text_size_medium"
+            android:paddingBottom="@dimen/spacing_micro"
+            android:paddingRight="@dimen/spacing_micro"
+            android:paddingLeft="@dimen/spacing_micro"
+            />
 
-        <ImageView
+        <View
             android:id="@+id/arrow_from_date"
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/from_date"
-            android:src="@drawable/ic_details_white_18dp" />
+            style="@android:style/Widget.DeviceDefault.Light.Spinner"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_alignBottom="@+id/from_date"
+            android:layout_toEndOf="@+id/from_date" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/to_date"
-            android:padding="@dimen/spacing_micro"
+            android:textSize="@dimen/text_size_medium"
+            android:paddingBottom="@dimen/spacing_micro"
+            android:paddingRight="@dimen/spacing_micro"
+            android:paddingLeft="@dimen/spacing_micro"
             android:text="To" />
 
         <TextView
             android:id="@+id/to_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_medium"
             android:layout_toLeftOf="@+id/arrow_to_date"
-            android:padding="@dimen/spacing_micro" />
+            android:paddingBottom="@dimen/spacing_micro"
+            android:paddingRight="@dimen/spacing_micro"
+            android:paddingLeft="@dimen/spacing_micro"  />
 
-        <ImageView
+        <View
+            style="@android:style/Widget.DeviceDefault.Light.Spinner"
             android:id="@+id/arrow_to_date"
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_details_white_18dp"/>
+            android:layout_height="16dp"
+            android:layout_width="16dp"
+            android:layout_alignBottom="@+id/to_date"
+            android:layout_alignParentEnd="true" />
     </RelativeLayout>
+
+    <!--<View-->
+        <!--android:id="@+id/separator"-->
+        <!--android:layout_below="@id/date_chooser"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="@android:color/darker_gray"/>-->
 
     <ListView
         android:id="@+id/expense_list_view"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/proceed_to_images_taking_button"
+        android:layout_above="@+id/find_expenses_button"
         android:layout_below="@+id/date_chooser"
         android:layout_marginTop="@dimen/spacing_minor">
 
@@ -74,6 +118,7 @@
     <Button
         android:id="@+id/find_expenses_button"
         style="@style/BottomActionButton"
+        android:layout_marginTop="@dimen/spacing_minor"
         android:layout_alignParentBottom="true"
         android:text="@string/find" />
 </RelativeLayout>

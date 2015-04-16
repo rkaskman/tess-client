@@ -3,4 +3,6 @@
     <item name="button_text_color_primary" type="color">#FF373737</item>
     <item name="button_background_primary" type="color">#FFEEEEEE</item>
     <item name="light_red" type="color">#ffee9890</item>
+    <item name="red_error" type="color">#ffff655d</item>
+    <item name="dark_gray" type="color">#aaa</item>
 </resources>

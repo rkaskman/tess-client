@@ -8,10 +8,10 @@ import java.util.List;
 
 import retrofit.Callback;
 import retrofit.http.Body;
-import retrofit.http.GET;
+import retrofit.http.POST;
 
 public interface ExpenseService {
 
-    @GET("/expense/forUserAndPeriod")
-    public void get(@Body ExpenseRequest expenseRequest, Callback<List<Expense>> callback);
+    @POST("/expense/forUserAndPeriod")
+    void get(@Body ExpenseRequest expenseRequest, Callback<List<Expense>> callback);
 }

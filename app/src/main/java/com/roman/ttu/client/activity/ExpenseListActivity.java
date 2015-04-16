@@ -38,12 +38,14 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
     private Calendar startDate;
     private Calendar endDate;
 
-    private ImageView startDateArrow;
-    private ImageView endDateArrow;
+    private View startDateArrow;
+    private View endDateArrow;
 
     private TextView startDateTextView;
     private TextView endDateTextView;
     private ListView expenseListView;
+    private View errorLine;
+    private View errorText;
 
     private long lastId = 0;
 
@@ -53,6 +55,7 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
 
     @Inject
     ExpenseService expenseService;
+    private ExpenseQueryCallback expenseQueryCallback = new ExpenseQueryCallback();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,10 +68,12 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
     private void initLayoutElements() {
         endDateTextView = (TextView) findViewById(R.id.to_date);
         startDateTextView = (TextView) findViewById(R.id.from_date);
-        startDateArrow = (ImageView) findViewById(R.id.arrow_from_date);
-        endDateArrow = (ImageView) findViewById(R.id.arrow_to_date);
+        startDateArrow = findViewById(R.id.arrow_from_date);
+        endDateArrow = findViewById(R.id.arrow_to_date);
         expenseListView = (ListView) findViewById(R.id.expense_list_view);
         findExpensesButton = (Button) findViewById(R.id.find_expenses_button);
+        errorLine = findViewById(R.id.error_line);
+        errorText = findViewById(R.id.error_text);
 
         startDateTextView.setText(DATE_FORMAT.format(startDate.getTime()));
         endDateTextView.setText(DATE_FORMAT.format(endDate.getTime()));
@@ -105,11 +110,25 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
         findExpensesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                expenseAdapter = null;
                 ExpenseRequest request = createExpenseRequest();
-                expenseService.get(request, new ExpenseQueryCallback());
+                if (startDate.after(endDate)) {
+                    setErrorVisible(true);
+                } else {
+                    setErrorVisible(false);
+                    if (expenseAdapter != null) {
+                        expenseAdapter.clear();
+                    }
+                    lastId = 0;
+                    expenseService.get(request, expenseQueryCallback);
+                }
             }
         });
+    }
+
+
+    private void setErrorVisible(boolean visible) {
+        errorLine.setBackgroundColor(getResources().getColor(visible ? R.color.red_error : R.color.dark_gray));
+        errorText.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     private ExpenseRequest createExpenseRequest() {
@@ -126,6 +145,7 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
     }
 
     private void showDatePicker(final Calendar cal, final TextView dateText, String tag) {
+
         DatePickerFragment datePickerFragment = new DatePickerFragment() {
             @Override
             public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -142,6 +162,8 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
                 dateText.setText(DATE_FORMAT.format(cal.getTime()));
             }
         };
+
+
         datePickerFragment.show(getFragmentManager(), tag);
     }
 
@@ -155,18 +177,22 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
             implements DatePickerDialog.OnDateSetListener {
     }
 
-    class ExpenseQueryCallback extends AuthenticationAwareActivityCallback<List<Expense>> {
+    public class ExpenseQueryCallback extends AuthenticationAwareActivityCallback<List<Expense>> {
 
         @Override
         public void success(List<Expense> expenses, Response response) {
             super.success(expenses, response);
 
-            if (expenseAdapter == null) {
-                expenseAdapter = new ExpenseAdapter(ExpenseListActivity.this, R.layout.view_expense_item, expenses);
-                lastId = expenses.get(expenses.size() -1).id;
-                expenseListView.setAdapter(expenseAdapter);
+            if (!expenses.isEmpty()) {
+                if (expenseAdapter == null) {
+                    expenseAdapter = new ExpenseAdapter(ExpenseListActivity.this, R.layout.view_expense_item, expenses);
+                    expenseListView.setAdapter(expenseAdapter);
+                } else {
+                    expenseAdapter.addAll(expenses);
+                }
+                lastId = expenses.get(expenses.size() - 1).id;
             } else {
-                expenseAdapter.addAll(expenses);
+
             }
         }
 

@@ -62,4 +62,10 @@ public class ExpenseAdapter extends ArrayAdapter<Expense> {
         this.expenses.addAll(expenses);
         notifyDataSetChanged();
     }
+
+    @Override
+    public void clear() {
+        this.expenses.clear();
+        notifyDataSetChanged();
+    }
 }

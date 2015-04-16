@@ -26,7 +26,8 @@ import dagger.Provides;
                 AuthenticationAwareActivityCallback.class,
                 StartActivity.SignInCallBack.class,
                 ReceiptPictureTakingActivity.ImagePostingCallback.class,
-                ExpenseListActivity.class})
+                ExpenseListActivity.class,
+                ExpenseListActivity.ExpenseQueryCallback.class})
 public class TessModule {
 
     public TessModule(Context context) {
