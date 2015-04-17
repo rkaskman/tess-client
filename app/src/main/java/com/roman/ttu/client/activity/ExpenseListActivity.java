@@ -3,19 +3,20 @@ package com.roman.ttu.client.activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.TessClient.R;
 import com.roman.ttu.client.adapter.ExpenseAdapter;
 import com.roman.ttu.client.rest.ExpenseService;
-import com.roman.ttu.client.rest.model.Expense;
 import com.roman.ttu.client.rest.model.ExpenseRequest;
+import com.roman.ttu.client.rest.model.ExpenseResponseContainer;
 import com.roman.ttu.client.service.AuthenticationAwareActivityCallback;
 
 import org.apache.commons.lang3.time.DateUtils;
@@ -29,6 +30,8 @@ import javax.inject.Inject;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+import static com.roman.ttu.client.rest.model.ExpenseResponseContainer.Expense;
 
 public class ExpenseListActivity extends AuthenticationAwareActivity {
 
@@ -50,8 +53,10 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
     private long lastId = 0;
 
     private ExpenseAdapter expenseAdapter;
+    private ProgressDialog progressDialog;
 
     private Button findExpensesButton;
+    private ExpensesScrollListener expensesScrollListener = new ExpensesScrollListener();
 
     @Inject
     ExpenseService expenseService;
@@ -78,6 +83,9 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
         startDateTextView.setText(DATE_FORMAT.format(startDate.getTime()));
         endDateTextView.setText(DATE_FORMAT.format(endDate.getTime()));
 
+        createProgressDialog();
+
+        expenseListView.setOnScrollListener(expensesScrollListener);
 
         startDateArrow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,19 +118,30 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
         findExpensesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ExpenseRequest request = createExpenseRequest();
-                if (startDate.after(endDate)) {
-                    setErrorVisible(true);
-                } else {
-                    setErrorVisible(false);
-                    if (expenseAdapter != null) {
-                        expenseAdapter.clear();
-                    }
-                    lastId = 0;
-                    expenseService.get(request, expenseQueryCallback);
-                }
+                findExpenses();
             }
         });
+    }
+
+    private void findExpenses() {
+        ExpenseRequest request = createExpenseRequest();
+        if (startDate.after(endDate)) {
+            setErrorVisible(true);
+        } else {
+            setErrorVisible(false);
+            if (expenseAdapter != null) {
+                expenseAdapter.clear();
+            }
+            lastId = 0;
+            expenseService.get(request, expenseQueryCallback);
+            progressDialog.show();
+        }
+    }
+
+    private void createProgressDialog() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading..");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
     }
 
 
@@ -177,28 +196,55 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
             implements DatePickerDialog.OnDateSetListener {
     }
 
-    public class ExpenseQueryCallback extends AuthenticationAwareActivityCallback<List<Expense>> {
+
+    private class ExpensesScrollListener implements AbsListView.OnScrollListener {
+        private boolean lastItemReached = true;
 
         @Override
-        public void success(List<Expense> expenses, Response response) {
-            super.success(expenses, response);
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+        }
 
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            switch (view.getId()) {
+                case R.id.expense_list_view:
+                    final int lastItem = firstVisibleItem + visibleItemCount;
+                    if (lastItem == totalItemCount && !lastItemReached) {
+                        lastItemReached = true;
+                        ExpenseRequest expenseRequest = createExpenseRequest();
+                        expenseRequest.lastId = ExpenseListActivity.this.lastId;
+                        expenseService.get(expenseRequest, expenseQueryCallback);
+                        progressDialog.show();
+                    }
+            }
+        }
+    }
+
+    public class ExpenseQueryCallback extends AuthenticationAwareActivityCallback<ExpenseResponseContainer> {
+
+        @Override
+        public void success(ExpenseResponseContainer expenseResponseContainer, Response response) {
+            super.success(expenseResponseContainer, response);
+            progressDialog.dismiss();
+            List<Expense> expenses = expenseResponseContainer.expenseList;
             if (!expenses.isEmpty()) {
                 if (expenseAdapter == null) {
-                    expenseAdapter = new ExpenseAdapter(ExpenseListActivity.this, R.layout.view_expense_item, expenses);
+                    expenseAdapter = new ExpenseAdapter(ExpenseListActivity.this, R.layout.view_expense_item,
+                            expenses);
                     expenseListView.setAdapter(expenseAdapter);
                 } else {
                     expenseAdapter.addAll(expenses);
                 }
                 lastId = expenses.get(expenses.size() - 1).id;
-            } else {
-
             }
+            expensesScrollListener.lastItemReached = expenseResponseContainer.lastReached ;
         }
 
         @Override
         public void failure(RetrofitError error) {
             super.failure(error);
+            progressDialog.dismiss();
         }
     }
 }

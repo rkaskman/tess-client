@@ -5,5 +5,5 @@ import java.util.Date;
 public class ExpenseRequest {
     public Date startDate;
     public Date endDate;
-    public int lastId = 0;
+    public long lastId = 0;
 }

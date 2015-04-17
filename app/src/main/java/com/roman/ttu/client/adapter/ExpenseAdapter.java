@@ -8,21 +8,21 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.TessClient.R;
-import com.roman.ttu.client.rest.model.Expense;
+import com.roman.ttu.client.rest.model.ExpenseResponseContainer;
 
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.List;
 
-public class ExpenseAdapter extends ArrayAdapter<Expense> {
+public class ExpenseAdapter extends ArrayAdapter<ExpenseResponseContainer.Expense> {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
 
-    private final List<Expense> expenses;
+    private final List<ExpenseResponseContainer.Expense> expenses;
     private final int resource;
     private final LayoutInflater layoutInflater;
 
-    public ExpenseAdapter(Context context, int resource, List<Expense> expenses) {
+    public ExpenseAdapter(Context context, int resource, List<ExpenseResponseContainer.Expense> expenses) {
         super(context, resource, expenses);
         this.layoutInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -36,7 +36,7 @@ public class ExpenseAdapter extends ArrayAdapter<Expense> {
             return expenseView;
         }
 
-        Expense expense = expenses.get(position);
+        ExpenseResponseContainer.Expense expense = expenses.get(position);
         expenseView = layoutInflater.inflate(resource, null);
 
         TextView expenseDate = (TextView) expenseView.findViewById(R.id.expense_date);
@@ -52,13 +52,13 @@ public class ExpenseAdapter extends ArrayAdapter<Expense> {
     }
 
     @Override
-    public void add(Expense expense) {
+    public void add(ExpenseResponseContainer.Expense expense) {
         expenses.add(expense);
         notifyDataSetChanged();
     }
 
     @Override
-    public void addAll(Collection<? extends Expense> expenses) {
+    public void addAll(Collection<? extends ExpenseResponseContainer.Expense> expenses) {
         this.expenses.addAll(expenses);
         notifyDataSetChanged();
     }
