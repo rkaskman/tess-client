@@ -23,4 +23,5 @@
     <string name="retry_sending_images">Retry</string>
     <string name="list_expenses">Show expenses</string>
     <string name="find">Find</string>
+    <string name="error_gcm_reg">Error obtaining Google id for push notifications</string>
 </resources>

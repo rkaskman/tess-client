@@ -7,11 +7,15 @@ public class SharedPreferenceManager {
 
     public static final String USER_NAME = "userName";
     public static final String USER_ID = "userId";
+    public static final String PREFERENCE_KEY = "tessPref";
+    public static final String GOOGLE_USER_EMAIL = "googleUserId";
+    public static final String GCM_REGISTRATION_ID = "gcmRegistrationId";
+    public static final String APP_VERSION = "appVersion";
 
     SharedPreferences sharedPreferences;
 
     public SharedPreferenceManager(Context context) {
-        sharedPreferences = context.getSharedPreferences(SharedPreferencesConfig.PREFERENCE_KEY, Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences(PREFERENCE_KEY, Context.MODE_PRIVATE);
     }
 
     public String getString(String name) {
@@ -20,6 +24,10 @@ public class SharedPreferenceManager {
 
     public long getLong(String name) {
         return sharedPreferences.getLong(name, 0L);
+    }
+
+    public int getInt(String name, int defaultValue) {
+        return sharedPreferences.getInt(name, defaultValue);
     }
 
     public void save(String key, String value) {
