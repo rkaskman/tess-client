@@ -3,6 +3,7 @@ package com.roman.ttu.client.rest.model;
 public class ImagesWrapper {
     public ImageWrapper regNumberImage;
     public ImageWrapper totalCostImage;
+    public String registrationId;
 
     public ImagesWrapper(ImageWrapper regNumberImage, ImageWrapper totalCostImage) {
         this.regNumberImage = regNumberImage;

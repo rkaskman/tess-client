@@ -26,6 +26,10 @@ public class SharedPreferenceManager {
         return sharedPreferences.getLong(name, 0L);
     }
 
+    public long getLong(String name, long defaultValue) {
+        return sharedPreferences.getLong(name, defaultValue);
+    }
+
     public int getInt(String name, int defaultValue) {
         return sharedPreferences.getInt(name, defaultValue);
     }

@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.example.TessClient.R;
+import com.roman.ttu.client.R;
 import com.roman.ttu.client.rest.model.ExpenseResponseContainer;
 
 import java.text.SimpleDateFormat;

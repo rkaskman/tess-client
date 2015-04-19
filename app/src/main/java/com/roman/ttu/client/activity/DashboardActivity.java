@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.TessClient.R;
+import com.roman.ttu.client.R;
 import com.roman.ttu.client.Application;
 
 import static com.roman.ttu.client.SharedPreferenceManager.USER_NAME;

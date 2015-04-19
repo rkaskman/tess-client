@@ -3,7 +3,7 @@ package com.roman.ttu.client.activity;
 import android.app.Activity;
 import android.os.Bundle;
 
-import com.example.TessClient.R;
+import com.roman.ttu.client.R;
 
 public class AuthErrorActivity extends Activity{
 

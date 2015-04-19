@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.TessClient.R;
+import com.roman.ttu.client.R;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
 import com.google.android.gms.auth.UserRecoverableAuthException;
@@ -47,7 +47,7 @@ public class StartActivity extends AbstractActivity {
     private static final String TAG = "StartActivity";
 
     //TODO: replace with real for testing
-    private String SENDER_ID = "senderId";
+    private String SENDER_ID = "413749891691";
 
     @Inject
     SignInService signInService;
@@ -161,6 +161,7 @@ public class StartActivity extends AbstractActivity {
                 try {
                     String registrationId = gcm.register(SENDER_ID);
                     preferenceManager.save(GCM_REGISTRATION_ID, registrationId);
+                    preferenceManager.save(APP_VERSION, getAppVersion());
                     return registrationId;
                 } catch (IOException ex) {
                     Log.e(TAG, ex.getMessage());
@@ -186,8 +187,8 @@ public class StartActivity extends AbstractActivity {
             return null;
         }
 
-        int registeredVersion = preferenceManager.getInt(APP_VERSION, Integer.MIN_VALUE);
-        int currentVersion = getAppVersion();
+        long registeredVersion = preferenceManager.getLong(APP_VERSION, Long.MIN_VALUE);
+        long currentVersion = getAppVersion();
         if (registeredVersion != currentVersion) {
             Log.i(TAG, "App version changed.");
             return null;

@@ -12,7 +12,7 @@ import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.TessClient.R;
+import com.roman.ttu.client.R;
 import com.roman.ttu.client.adapter.ExpenseAdapter;
 import com.roman.ttu.client.rest.ExpenseService;
 import com.roman.ttu.client.rest.model.ExpenseRequest;

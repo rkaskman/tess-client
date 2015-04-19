@@ -21,8 +21,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.TessClient.R;
-import com.roman.ttu.client.SharedPreferencesConfig;
+import com.roman.ttu.client.R;
+import com.roman.ttu.client.SharedPreferenceManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -94,9 +94,9 @@ public class ImageEditingActivity extends Activity {
             imagesDir.mkdirs();
         }
 
-        SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferencesConfig.PREFERENCE_KEY, 0);
+        SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferenceManager.PREFERENCE_KEY, 0);
 
-        String filename = sharedPreferences.getString(SharedPreferencesConfig.GOOGLE_USER_EMAIL, null)
+        String filename = sharedPreferences.getString(SharedPreferenceManager.GOOGLE_USER_EMAIL, null)
                 + "_" + System.currentTimeMillis() + ".jpg";
         File destinationFile = new File(imagesDir, filename);
 

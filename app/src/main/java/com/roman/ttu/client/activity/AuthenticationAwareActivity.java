@@ -5,8 +5,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.roman.ttu.client.SharedPreferenceManager;
 
-import static com.roman.ttu.client.SharedPreferencesConfig.GOOGLE_USER_EMAIL;
 
 public abstract class AuthenticationAwareActivity extends AbstractActivity {
 
@@ -22,7 +22,7 @@ public abstract class AuthenticationAwareActivity extends AbstractActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (preferenceManager.hasPreference(GOOGLE_USER_EMAIL) && sessionExpired()) {
+        if (preferenceManager.hasPreference(SharedPreferenceManager.GOOGLE_USER_EMAIL) && sessionExpired()) {
             if(isDeviceOnline()) {
                 Intent intent = new Intent(AuthenticationAwareActivity.this, StartActivity.class);
                 startActivityForResult(intent, StartActivity.REQUEST_AUTH_CODE);

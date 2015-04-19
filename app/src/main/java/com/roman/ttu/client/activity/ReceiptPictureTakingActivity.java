@@ -14,8 +14,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.TessClient.R;
+import com.roman.ttu.client.R;
 import com.roman.ttu.client.Application;
+import com.roman.ttu.client.SharedPreferenceManager;
 import com.roman.ttu.client.db.PendingImagesDAO;
 import com.roman.ttu.client.rest.ImagePostingService;
 import com.roman.ttu.client.util.IOUtil;
@@ -32,6 +33,7 @@ import javax.inject.Inject;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+import static com.roman.ttu.client.SharedPreferenceManager.GCM_REGISTRATION_ID;
 import static com.roman.ttu.client.SharedPreferenceManager.USER_ID;
 import static com.roman.ttu.client.activity.ImageEditingActivity.IMAGE_FILE;
 import static com.roman.ttu.client.rest.model.ImagesWrapper.ImageWrapper;
@@ -209,6 +211,7 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
     private void processImages() throws IOException {
         imagesWrapper = new ImagesWrapper(getImageWrapperFor(imageWithRegNumber),
                 getImageWrapperFor(imageWithTotalCost));
+        imagesWrapper.registrationId = preferenceManager.getString(GCM_REGISTRATION_ID);
 
         if (isDeviceOnline()) {
             sendImages();
