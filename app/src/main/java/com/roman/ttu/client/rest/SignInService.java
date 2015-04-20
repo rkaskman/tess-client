@@ -1,6 +1,6 @@
 package com.roman.ttu.client.rest;
 
-import com.roman.ttu.client.rest.model.User;
+import com.roman.ttu.client.model.User;
 
 import retrofit.Callback;
 import retrofit.http.POST;

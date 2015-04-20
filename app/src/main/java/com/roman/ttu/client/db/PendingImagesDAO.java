@@ -5,8 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.roman.ttu.client.rest.model.ImagesWrapper;
-import com.roman.ttu.client.rest.model.UserImagesWrapper;
+import com.roman.ttu.client.model.ImagesWrapper;
+import com.roman.ttu.client.model.UserImagesWrapper;
 
 import java.util.Collection;
 import java.util.Date;
@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static com.roman.ttu.client.db.TessClientDatabase.*;
-import static com.roman.ttu.client.rest.model.ImagesWrapper.*;
+import static com.roman.ttu.client.model.ImagesWrapper.*;
 
 public class PendingImagesDAO {
 

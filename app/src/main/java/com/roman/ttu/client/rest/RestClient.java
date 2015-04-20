@@ -22,7 +22,7 @@ import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
 
 public class RestClient {
-    private static final String BASE_URL = "https://192.168.1.67:8999/";
+    private static final String BASE_URL = "https://192.168.1.69:8999/";
     private RestAdapter restAdapter;
 
     public RestClient() {

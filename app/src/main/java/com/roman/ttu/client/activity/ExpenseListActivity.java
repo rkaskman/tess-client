@@ -15,8 +15,8 @@ import android.widget.TextView;
 import com.roman.ttu.client.R;
 import com.roman.ttu.client.adapter.ExpenseAdapter;
 import com.roman.ttu.client.rest.ExpenseService;
-import com.roman.ttu.client.rest.model.ExpenseRequest;
-import com.roman.ttu.client.rest.model.ExpenseResponseContainer;
+import com.roman.ttu.client.model.ExpenseRequest;
+import com.roman.ttu.client.model.ExpenseResponseContainer;
 import com.roman.ttu.client.service.AuthenticationAwareActivityCallback;
 
 import org.apache.commons.lang3.time.DateUtils;
@@ -31,7 +31,7 @@ import javax.inject.Inject;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-import static com.roman.ttu.client.rest.model.ExpenseResponseContainer.Expense;
+import static com.roman.ttu.client.model.ExpenseResponseContainer.Expense;
 
 public class ExpenseListActivity extends AuthenticationAwareActivity {
 

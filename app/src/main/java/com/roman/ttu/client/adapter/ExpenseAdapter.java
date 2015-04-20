@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.roman.ttu.client.R;
-import com.roman.ttu.client.rest.model.ExpenseResponseContainer;
+import com.roman.ttu.client.model.ExpenseResponseContainer;
 
 import java.text.SimpleDateFormat;
 import java.util.Collection;

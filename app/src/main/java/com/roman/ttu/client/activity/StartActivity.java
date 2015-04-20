@@ -24,7 +24,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.roman.ttu.client.Application;
 import com.roman.ttu.client.GoogleTokenRetriever;
 import com.roman.ttu.client.rest.SignInService;
-import com.roman.ttu.client.rest.model.User;
+import com.roman.ttu.client.model.User;
 import com.roman.ttu.client.service.AuthenticationAwareActivityCallback;
 
 import java.io.IOException;

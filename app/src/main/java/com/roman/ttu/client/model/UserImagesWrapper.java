@@ -1,4 +1,4 @@
-package com.roman.ttu.client.rest.model;
+package com.roman.ttu.client.model;
 
 
 import java.util.Date;

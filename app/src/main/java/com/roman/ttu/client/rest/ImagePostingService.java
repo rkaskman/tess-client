@@ -1,6 +1,6 @@
 package com.roman.ttu.client.rest;
 
-import com.roman.ttu.client.rest.model.ImagesWrapper;
+import com.roman.ttu.client.model.ImagesWrapper;
 
 import retrofit.Callback;
 import retrofit.http.Body;

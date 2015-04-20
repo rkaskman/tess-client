@@ -6,6 +6,7 @@ import android.content.Context;
 import com.roman.ttu.client.activity.DashboardActivity;
 import com.roman.ttu.client.activity.ExpenseListActivity;
 import com.roman.ttu.client.activity.ReceiptPictureTakingActivity;
+import com.roman.ttu.client.activity.ResponseHandlingActivity;
 import com.roman.ttu.client.activity.StartActivity;
 import com.roman.ttu.client.db.PendingImagesDAO;
 import com.roman.ttu.client.rest.ExpenseService;
@@ -27,7 +28,8 @@ import dagger.Provides;
                 StartActivity.SignInCallBack.class,
                 ReceiptPictureTakingActivity.ImagePostingCallback.class,
                 ExpenseListActivity.class,
-                ExpenseListActivity.ExpenseQueryCallback.class})
+                ExpenseListActivity.ExpenseQueryCallback.class,
+                ResponseHandlingActivity.class})
 public class TessModule {
 
     public TessModule(Context context) {

@@ -1,7 +1,7 @@
 package com.roman.ttu.client.rest;
 
-import com.roman.ttu.client.rest.model.ExpenseRequest;
-import com.roman.ttu.client.rest.model.ExpenseResponseContainer;
+import com.roman.ttu.client.model.ExpenseRequest;
+import com.roman.ttu.client.model.ExpenseResponseContainer;
 
 
 import retrofit.Callback;

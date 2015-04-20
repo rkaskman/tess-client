@@ -16,11 +16,10 @@ import android.widget.Toast;
 
 import com.roman.ttu.client.R;
 import com.roman.ttu.client.Application;
-import com.roman.ttu.client.SharedPreferenceManager;
 import com.roman.ttu.client.db.PendingImagesDAO;
 import com.roman.ttu.client.rest.ImagePostingService;
 import com.roman.ttu.client.util.IOUtil;
-import com.roman.ttu.client.rest.model.ImagesWrapper;
+import com.roman.ttu.client.model.ImagesWrapper;
 import com.roman.ttu.client.service.AuthenticationAwareActivityCallback;
 
 import java.io.File;
@@ -36,7 +35,7 @@ import retrofit.client.Response;
 import static com.roman.ttu.client.SharedPreferenceManager.GCM_REGISTRATION_ID;
 import static com.roman.ttu.client.SharedPreferenceManager.USER_ID;
 import static com.roman.ttu.client.activity.ImageEditingActivity.IMAGE_FILE;
-import static com.roman.ttu.client.rest.model.ImagesWrapper.ImageWrapper;
+import static com.roman.ttu.client.model.ImagesWrapper.ImageWrapper;
 import static com.roman.ttu.client.util.IOUtil.getFileExtension;
 
 public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
