@@ -1,20 +1,15 @@
 package com.roman.ttu.client;
 
 import android.app.IntentService;
-import android.app.NotificationManager;
+import android.app.Notification;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.util.Log;
 
-import com.roman.ttu.client.R;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.roman.ttu.client.activity.ResponseHandlingActivity;
-import com.roman.ttu.client.GcmBroadcastReceiver;
 import com.roman.ttu.client.model.RecognitionErrorResponse;
 import com.roman.ttu.client.model.RecognizedReceiptData;
 
@@ -23,9 +18,11 @@ import java.util.Date;
 
 public class GcmIntentService extends IntentService {
 
-    private NotificationManagerCompat  mNotificationManager;
-
-    private static final  String TAG = "GcmIntentService";
+    public static final String EXTRA_RECOGNITION_ERROR_RESPONSE = "errorResponse";
+    public static final String EXTRA_NOTIFICATION_ID = "notificationId";
+    public static final String EXTRA_RECOGNIZED_RECEIPT_DATA = "recognizedReceiptData";
+    private static final String NOTIFICATION_ACTION = "notificationAction";
+    private NotificationManagerCompat mNotificationManager;
 
     public GcmIntentService() {
         super("GcmIntentService");
@@ -39,14 +36,8 @@ public class GcmIntentService extends IntentService {
 
         if (!extras.isEmpty()) {  // has effect of unparcelling Bundle
             if (GoogleCloudMessaging.
-                    MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
-
-            } else if (GoogleCloudMessaging.
-                    MESSAGE_TYPE_DELETED.equals(messageType)) {
-//
-            } else if (GoogleCloudMessaging.
                     MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-                if(hasNoError(extras)) {
+                if (hasNoError(extras)) {
                     RecognizedReceiptData recognizedReceiptData = getRecognizedReceiptData(extras);
                     sendNotification(recognizedReceiptData);
 
@@ -82,22 +73,25 @@ public class GcmIntentService extends IntentService {
     }
 
     private void sendNotification(RecognitionErrorResponse errorResponse) {
-
         initNotificationManager();
+        Intent intent = createHandlingActivityIntent();
+        int notificationId = getNotificationId();
+        intent.putExtra(EXTRA_RECOGNITION_ERROR_RESPONSE, errorResponse);
+        intent.putExtra(EXTRA_NOTIFICATION_ID, notificationId);
+
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, ResponseHandlingActivity.class), 0);
+                intent, 0);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_error_white_48dp)
-                        .setContentTitle("Recognition error")
+                        .setContentTitle(getString(R.string.notification_title_recognition_error))
+                        .setDefaults(Notification.DEFAULT_ALL)
                         .setGroup("group_key_tess")
-                        .setContentText("Following error ocurred - "  +errorResponse.message+ "\n," +
-                                "recognized company reg. number is - "+ errorResponse.recognizedRegNr +"\n,"+
-                                "recognized total cost  is '" + errorResponse.recognizedTotalCost+"'");
+                        .setAutoCancel(true)
+                        .setContentText(getString(R.string.notification_recognition_error));
 
         mBuilder.setContentIntent(contentIntent);
-        int notificationId = getNotificationId();
         mNotificationManager.notify(notificationId, mBuilder.build());
     }
 
@@ -108,27 +102,38 @@ public class GcmIntentService extends IntentService {
         return Integer.valueOf(last4Str);
     }
 
-
     private void sendNotification(RecognizedReceiptData recognizedReceiptData) {
-
         initNotificationManager();
+        Intent intent = createHandlingActivityIntent();
+        int notificationId = getNotificationId();
+        intent.putExtra(EXTRA_RECOGNIZED_RECEIPT_DATA, recognizedReceiptData);
+        intent.putExtra(EXTRA_NOTIFICATION_ID, notificationId);
+
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, ResponseHandlingActivity.class), 0);
+                intent, 0);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_done_white_48dp)
-                        .setContentTitle("Succesful recognition")
+                        .setDefaults(Notification.DEFAULT_ALL)
+                        .setContentTitle(getString(R.string.notification_title_recognition_ok))
                         .setGroup("group_key_tess_success")
-                        .setContentText("Company - "  + recognizedReceiptData.companyName+ "\n," +
-                                "total cost - "+ recognizedReceiptData.totalCost+" "+recognizedReceiptData.currency);
+                        .setAutoCancel(true)
+                        .setContentText(getString(R.string.notification_recognition_ok));
 
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(getNotificationId(), mBuilder.build());
     }
 
+    private Intent createHandlingActivityIntent() {
+        Intent intent = new Intent(this, ResponseHandlingActivity.class);
+        intent.setAction(NOTIFICATION_ACTION + System.currentTimeMillis());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        return intent;
+    }
+
     private void initNotificationManager() {
-        if(mNotificationManager == null) {
+        if (mNotificationManager == null) {
             mNotificationManager =
                     NotificationManagerCompat.from(this);
         }

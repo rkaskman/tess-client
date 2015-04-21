@@ -24,4 +24,11 @@
     <string name="list_expenses">Show expenses</string>
     <string name="find">Find</string>
     <string name="error_gcm_reg">Error obtaining Google id for push notifications</string>
+    <string name="recognized_total_cost">Recognized total cost:</string>
+    <string name="recognized_reg_num">Recognized reg. number:</string>
+    <string name="header_receipt_recogniton_failed">Recognition of receipt data failed!</string>
+    <string name="notification_title_recognition_error">TessApp recognition error</string>
+    <string name="notification_recognition_error">New erroneous recognition :(</string>
+    <string name="notification_title_recognition_ok">TessApp successful recognition</string>
+    <string name="notification_recognition_ok">New successful recognition!</string>
 </resources>
