@@ -2,9 +2,11 @@ package com.roman.ttu.client.activity;
 
 import android.app.Activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.roman.ttu.client.R;
 import com.roman.ttu.client.SharedPreferenceManager;
 
 
@@ -12,11 +14,12 @@ public abstract class AuthenticationAwareActivity extends AbstractActivity {
 
     public static final int TIME_BUFFER_BEFORE_SESSION_EXPIRY_MILLIS = 3 * 60 * 1000;
     public static final String SESSION_EXPIRES_AT = "sessionExpiresAt";
-
+    protected ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        createProgressDialog();
     }
 
     @Override
@@ -51,5 +54,11 @@ public abstract class AuthenticationAwareActivity extends AbstractActivity {
     protected void finishActivityAndShowAuthError() {
         startActivity(new Intent(this, AuthErrorActivity.class));
         finish();
+    }
+
+    private void createProgressDialog() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getString(R.string.loading_progress));
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
     }
 }

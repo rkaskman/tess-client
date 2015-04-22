@@ -6,13 +6,13 @@
     android:paddingLeft="@dimen/spacing_medium"
     android:paddingRight="@dimen/spacing_medium">
 
-
     <RelativeLayout
         android:id="@+id/layout_recognition_failed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/image_recognition_failed"
@@ -47,7 +47,7 @@
             android:textSize="@dimen/text_size_medium" />
 
         <TextView
-            android:id="@+id/recognized_reg_num"
+            android:id="@+id/recognized_reg_number"
             android:layout_width="56dp"
             android:layout_height="wrap_content"
             android:padding="@dimen/spacing_minor"
@@ -56,7 +56,6 @@
             android:layout_below="@+id/header_recognition_failed"
             android:layout_alignParentRight="true"
             android:layout_toRightOf="@+id/header_recognized_reg_num" />
-
 
         <TextView
             android:id="@+id/header_recognized_total_cost"
@@ -74,7 +73,6 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/spacing_minor"
             android:layout_marginTop="@dimen/spacing_minor"
-            android:text="121.11"
             android:textSize="@dimen/text_size_medium"
             android:textStyle="bold"
             android:layout_below="@+id/header_recognized_reg_num"
@@ -83,12 +81,108 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/layout_recognition_successful"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/image_recognition_succeeded"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_done_white_48dp"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true" />
+
+        <TextView
+            android:id="@+id/header_recognition_succeeded"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_minor"
+            android:text="@string/recognition_succeeded"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/image_recognition_succeeded"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_size_medium" />
+
+        <TextView
+            android:id="@+id/header_reg_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_minor"
+            android:layout_below="@+id/header_recognition_succeeded"
+            android:layout_marginTop="@dimen/spacing_minor"
+            android:text="@string/reg_number"
+            android:textSize="@dimen/text_size_medium" />
+
+        <TextView
+            android:id="@+id/reg_number"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_minor"
+            android:layout_marginTop="@dimen/spacing_minor"
+            android:textSize="@dimen/text_size_medium"
+            android:layout_below="@+id/header_recognition_succeeded"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/header_reg_number" />
+
+        <TextView
+            android:id="@+id/header_company"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_minor"
+            android:layout_below="@+id/header_reg_number"
+            android:layout_marginTop="@dimen/spacing_minor"
+            android:text="@string/header_company"
+            android:textSize="@dimen/text_size_medium" />
+
+        <TextView
+            android:id="@+id/company"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_minor"
+            android:layout_marginTop="@dimen/spacing_minor"
+            android:textSize="@dimen/text_size_medium"
+            android:layout_below="@+id/header_reg_number"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/header_company" />
+
+        <TextView
+            android:id="@+id/header_total_cost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_minor"
+            android:layout_below="@+id/header_company"
+            android:layout_marginTop="@dimen/spacing_minor"
+            android:text="@string/total_cost"
+            android:textSize="@dimen/text_size_medium" />
+
+        <TextView
+            android:id="@+id/total_cost"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_minor"
+            android:layout_marginTop="@dimen/spacing_minor"
+            android:textSize="@dimen/text_size_medium"
+            android:textStyle="bold"
+            android:layout_below="@+id/header_company"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/header_total_cost" />
+
+    </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/buttons_error"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/spacing_medium">
+        android:layout_marginBottom="@dimen/spacing_medium"
+        android:visibility="gone">
 
         <Button
             android:id="@+id/button_retry_taking_pictures"
@@ -97,8 +191,8 @@
             android:layout_marginRight="@dimen/spacing_micro"
             android:layout_weight="1"
             android:background="@color/button_background_primary"
-            android:text="Retry"
-            android:textColor="@color/button_text_color_primary"></Button>
+            android:text="@string/confirm"
+            android:textColor="@color/button_text_color_primary"/>
 
         <Button
             android:id="@+id/button_ignore"
@@ -107,7 +201,35 @@
             android:layout_marginLeft="@dimen/spacing_micro"
             android:layout_weight="1"
             android:background="@color/button_background_primary"
-            android:text="Ignore"
+            android:text="@string/decline"
+            android:textColor="@color/button_text_color_primary"></Button>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/buttons_success"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/spacing_medium">
+
+        <Button
+            android:id="@+id/button_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/spacing_micro"
+            android:layout_weight="1"
+            android:background="@color/button_background_primary"
+            android:text="@string/retry"
+            android:textColor="@color/button_text_color_primary"></Button>
+
+        <Button
+            android:id="@+id/button_decline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/spacing_micro"
+            android:layout_weight="1"
+            android:background="@color/button_background_primary"
+            android:text="@string/ignore"
             android:textColor="@color/button_text_color_primary"></Button>
     </LinearLayout>
 </RelativeLayout>

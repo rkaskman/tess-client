@@ -31,4 +31,13 @@
     <string name="notification_recognition_error">New erroneous recognition :(</string>
     <string name="notification_title_recognition_ok">TessApp successful recognition</string>
     <string name="notification_recognition_ok">New successful recognition!</string>
+    <string name="header_company">Company:</string>
+    <string name="confirm">Confirm</string>
+    <string name="decline">Decline</string>
+    <string name="retry">Retry</string>
+    <string name="ignore">Ignore</string>
+    <string name="recognition_succeeded">Recognition succeeded!</string>
+    <string name="reg_number">Reg. number:</string>
+    <string name="total_cost">Total cost:</string>
+    <string name="loading_progress">Loading..</string>
 </resources>
