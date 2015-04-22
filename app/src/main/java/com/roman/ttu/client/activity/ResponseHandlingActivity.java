@@ -18,15 +18,16 @@ import com.roman.ttu.client.service.AuthenticationAwareActivityCallback;
 import javax.inject.Inject;
 
 import retrofit.RetrofitError;
-import retrofit.client.Response;
+    import retrofit.client.Response;
 
-import static com.roman.ttu.client.GcmIntentService.*;
+    import static com.roman.ttu.client.GcmIntentService.*;
 
 
-public class ResponseHandlingActivity extends AuthenticationAwareActivity {
+    public class ResponseHandlingActivity extends AuthenticationAwareActivity {
 
-    @Inject
+        @Inject
     ExpenseService expenseService;
+    private ResponseHandlingActivityCallback callback = new ResponseHandlingActivityCallback();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +121,7 @@ public class ResponseHandlingActivity extends AuthenticationAwareActivity {
         this.setIntent(intent);
     }
 
-    AuthenticationAwareActivityCallback callback = new AuthenticationAwareActivityCallback() {
+    public class ResponseHandlingActivityCallback extends AuthenticationAwareActivityCallback {
         @Override
         public void success(Object o, Response response) {
             super.success(o, response);

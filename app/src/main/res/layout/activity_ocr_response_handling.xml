@@ -86,7 +86,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/image_recognition_succeeded"
@@ -191,7 +192,7 @@
             android:layout_marginRight="@dimen/spacing_micro"
             android:layout_weight="1"
             android:background="@color/button_background_primary"
-            android:text="@string/confirm"
+            android:text="@string/retry"
             android:textColor="@color/button_text_color_primary"/>
 
         <Button
@@ -201,7 +202,7 @@
             android:layout_marginLeft="@dimen/spacing_micro"
             android:layout_weight="1"
             android:background="@color/button_background_primary"
-            android:text="@string/decline"
+            android:text="@string/ignore"
             android:textColor="@color/button_text_color_primary"></Button>
     </LinearLayout>
 
@@ -210,7 +211,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/spacing_medium">
+        android:layout_marginBottom="@dimen/spacing_medium"
+        android:visibility="gone">
 
         <Button
             android:id="@+id/button_confirm"
@@ -219,7 +221,7 @@
             android:layout_marginRight="@dimen/spacing_micro"
             android:layout_weight="1"
             android:background="@color/button_background_primary"
-            android:text="@string/retry"
+            android:text="@string/confirm"
             android:textColor="@color/button_text_color_primary"></Button>
 
         <Button
@@ -229,7 +231,7 @@
             android:layout_marginLeft="@dimen/spacing_micro"
             android:layout_weight="1"
             android:background="@color/button_background_primary"
-            android:text="@string/ignore"
+            android:text="@string/decline"
             android:textColor="@color/button_text_color_primary"></Button>
     </LinearLayout>
 </RelativeLayout>
