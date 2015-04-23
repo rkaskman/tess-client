@@ -15,8 +15,8 @@ public interface ExpenseService {
     void get(@Body ExpenseRequest expenseRequest, Callback<ExpenseResponseContainer> callback);
 
     @POST("/expense/confirm/{recognitionId}")
-    void confirm(@Path("recognitionId") String recognitionId, Callback callback);
+    void confirm(@Path("recognitionId") String recognitionId, Callback<Object> callback);
 
     @POST("/expense/decline/{recognitionId}")
-    void decline(@Path("recognitionId") String recognitionId, Callback callback);
+    void decline(@Path("recognitionId") String recognitionId, Callback<Object> callback);
 }
