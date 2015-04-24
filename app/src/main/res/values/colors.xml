@@ -5,4 +5,5 @@
     <item name="light_red" type="color">#ffee9890</item>
     <item name="red_error" type="color">#ffff655d</item>
     <item name="dark_gray" type="color">#aaa</item>
+    <item name="very_dark_gray" type="color">#ff5d5d5d</item>
 </resources>

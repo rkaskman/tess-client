@@ -4,9 +4,13 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ListView;
@@ -23,6 +27,7 @@ import org.apache.commons.lang3.time.DateUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +36,7 @@ import javax.inject.Inject;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+import static android.widget.AdapterView.OnItemLongClickListener;
 import static com.roman.ttu.client.model.ExpenseResponseContainer.Expense;
 
 public class ExpenseListActivity extends AuthenticationAwareActivity {
@@ -58,6 +64,11 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
     private Button findExpensesButton;
     private ExpensesScrollListener expensesScrollListener = new ExpensesScrollListener();
 
+    private Expense currentlySelectedExpense;
+    private View currentlySelectedExpenseView;
+
+    private Drawable initialBackGroundDrawable;
+
     @Inject
     ExpenseService expenseService;
     private ExpenseQueryCallback expenseQueryCallback = new ExpenseQueryCallback();
@@ -71,6 +82,9 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
     }
 
     private void initLayoutElements() {
+
+
+
         endDateTextView = (TextView) findViewById(R.id.to_date);
         startDateTextView = (TextView) findViewById(R.id.from_date);
         startDateArrow = findViewById(R.id.arrow_from_date);
@@ -86,6 +100,9 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
         createProgressDialog();
 
         expenseListView.setOnScrollListener(expensesScrollListener);
+
+
+        expenseListView.setOnItemLongClickListener(itemLongClickListener);
 
         startDateArrow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,6 +213,20 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
             implements DatePickerDialog.OnDateSetListener {
     }
 
+    private OnItemLongClickListener itemLongClickListener = new OnItemLongClickListener() {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            currentlySelectedExpense = expenseAdapter.getExpenses().get(position);
+            currentlySelectedExpenseView = view;
+
+            if(initialBackGroundDrawable == null) {
+                initialBackGroundDrawable = view.getBackground();
+            }
+
+            view.setBackground(getDrawable(R.drawable.dark_grey_color));
+            return false;
+        }
+    };
 
     private class ExpensesScrollListener implements AbsListView.OnScrollListener {
         private boolean lastItemReached = true;

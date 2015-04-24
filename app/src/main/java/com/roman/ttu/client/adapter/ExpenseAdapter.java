@@ -10,19 +10,24 @@ import android.widget.TextView;
 import com.roman.ttu.client.R;
 import com.roman.ttu.client.model.ExpenseResponseContainer;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
-public class ExpenseAdapter extends ArrayAdapter<ExpenseResponseContainer.Expense> {
+import static com.roman.ttu.client.model.ExpenseResponseContainer.Expense;
+
+public class ExpenseAdapter extends ArrayAdapter<Expense> {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
+    public static final String STATE_INITIAL = "I";
 
-    private final List<ExpenseResponseContainer.Expense> expenses;
+    private final List<Expense> expenses;
     private final int resource;
     private final LayoutInflater layoutInflater;
 
-    public ExpenseAdapter(Context context, int resource, List<ExpenseResponseContainer.Expense> expenses) {
+    public ExpenseAdapter(Context context, int resource, List<Expense> expenses) {
         super(context, resource, expenses);
         this.layoutInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -36,7 +41,7 @@ public class ExpenseAdapter extends ArrayAdapter<ExpenseResponseContainer.Expens
             return expenseView;
         }
 
-        ExpenseResponseContainer.Expense expense = expenses.get(position);
+        Expense expense = expenses.get(position);
         expenseView = layoutInflater.inflate(resource, null);
 
         TextView expenseDate = (TextView) expenseView.findViewById(R.id.expense_date);
@@ -46,19 +51,33 @@ public class ExpenseAdapter extends ArrayAdapter<ExpenseResponseContainer.Expens
         expenseEnterprise.setText(expense.companyName);
 
         TextView expenseSum = (TextView) expenseView.findViewById(R.id.expense_sum);
-        expenseSum.setText(expense.sum);
+        expenseSum.setText(new BigDecimal(expense.sum).setScale(2, BigDecimal.ROUND_HALF_UP).toString()
+                + " " + expense.currency);
+
+        if (STATE_INITIAL.equals(expense.state)) {
+            initializeConfirmation(expenseView);
+        }
 
         return expenseView;
     }
 
+    private void initializeConfirmation(View expenseView) {
+        expenseView.findViewById(R.id.confirmation_info_icon).setVisibility(View.VISIBLE);
+        expenseView.findViewById(R.id.confirm_notification).setVisibility(View.VISIBLE);
+    }
+
+    public List<Expense> getExpenses() {
+        return expenses != null ? Collections.unmodifiableList(expenses) : Collections.<Expense>emptyList();
+    }
+
     @Override
-    public void add(ExpenseResponseContainer.Expense expense) {
+    public void add(Expense expense) {
         expenses.add(expense);
         notifyDataSetChanged();
     }
 
     @Override
-    public void addAll(Collection<? extends ExpenseResponseContainer.Expense> expenses) {
+    public void addAll(Collection<? extends Expense> expenses) {
         this.expenses.addAll(expenses);
         notifyDataSetChanged();
     }

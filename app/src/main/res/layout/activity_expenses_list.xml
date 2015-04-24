@@ -4,8 +4,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_marginLeft="@dimen/spacing_medium"
-    android:layout_marginRight="@dimen/spacing_medium"
+
     android:layout_marginTop="@dimen/spacing_xlarge"
     android:orientation="vertical">
 
@@ -14,6 +13,8 @@
         android:id="@+id/date_chooser"
         android:layout_width="fill_parent"
         android:layout_height="64dp"
+        android:layout_marginLeft="@dimen/spacing_medium"
+        android:layout_marginRight="@dimen/spacing_medium"
         android:layout_alignParentTop="true"
         android:padding="@dimen/spacing_micro"
       >

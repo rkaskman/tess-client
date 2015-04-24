@@ -11,6 +11,8 @@ public class ExpenseResponseContainer {
         public long id;
         public String companyName;
         public String sum;
+        public String currency;
         public Date date;
+        public String state;
     }
 }

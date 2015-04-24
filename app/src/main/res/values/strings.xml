@@ -40,4 +40,5 @@
     <string name="reg_number">Reg. number:</string>
     <string name="total_cost">Total cost:</string>
     <string name="loading_progress">Loading..</string>
+    <string name="press_to_confirm">Press to confirm!</string>
 </resources>
