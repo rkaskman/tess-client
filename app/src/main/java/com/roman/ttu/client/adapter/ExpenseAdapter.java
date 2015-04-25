@@ -22,6 +22,7 @@ public class ExpenseAdapter extends ArrayAdapter<Expense> {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
     public static final String STATE_INITIAL = "I";
+    public static final String STATE_ACCEPTED = "A";
 
     private final List<Expense> expenses;
     private final int resource;
@@ -66,6 +67,11 @@ public class ExpenseAdapter extends ArrayAdapter<Expense> {
         expenseView.findViewById(R.id.confirm_notification).setVisibility(View.VISIBLE);
     }
 
+    public void markConfirmed(View expenseView) {
+        expenseView.findViewById(R.id.confirmation_info_icon).setVisibility(View.GONE);
+        expenseView.findViewById(R.id.confirm_notification).setVisibility(View.GONE);
+    }
+
     public List<Expense> getExpenses() {
         return expenses != null ? Collections.unmodifiableList(expenses) : Collections.<Expense>emptyList();
     }
@@ -80,6 +86,12 @@ public class ExpenseAdapter extends ArrayAdapter<Expense> {
     public void addAll(Collection<? extends Expense> expenses) {
         this.expenses.addAll(expenses);
         notifyDataSetChanged();
+    }
+
+    public void removeWithoutNotification(Expense expense) {
+        setNotifyOnChange(false);
+        this.expenses.remove(expense);
+        setNotifyOnChange(true);
     }
 
     @Override

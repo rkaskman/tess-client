@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/confirm_expense"
+    android:icon="@drawable/ic_done_white_24dp"
+    android:visible="false"
+        android:showAsAction="always"
+        android:orderInCategory="100"
+        android:title="Confirm expense" />
+
+    <item android:id="@+id/delete_expense"
+        android:icon="@drawable/ic_close_white_24dp"
+        android:visible="false"
+        android:orderInCategory="101"
+        android:showAsAction="always"
+        android:title="Delete expense" />
+</menu>

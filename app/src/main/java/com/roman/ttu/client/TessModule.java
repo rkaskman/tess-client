@@ -29,6 +29,8 @@ import dagger.Provides;
                 ReceiptPictureTakingActivity.ImagePostingCallback.class,
                 ExpenseListActivity.class,
                 ExpenseListActivity.ExpenseQueryCallback.class,
+                ExpenseListActivity.ExpenseConfirmationCallback.class,
+                ExpenseListActivity.ExpenseDeclineCallback.class,
                 ResponseHandlingActivity.class,
                 ResponseHandlingActivity.ResponseHandlingActivityCallback.class})
 public class TessModule {

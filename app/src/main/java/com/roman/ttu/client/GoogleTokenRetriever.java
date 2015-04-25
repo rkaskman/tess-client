@@ -58,7 +58,7 @@ public class GoogleTokenRetriever extends AsyncTask<Void, Void, String> {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(activity, msg, Toast.LENGTH_LONG);
+                    Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
                 }
             });
         }
