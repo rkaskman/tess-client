@@ -7,11 +7,13 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.roman.ttu.client.R;
 import com.roman.ttu.client.Application;
 
 import static com.roman.ttu.client.SharedPreferenceManager.USER_NAME;
+import static com.roman.ttu.client.activity.StartActivity.NO_CONNECTION;
 
 public class DashboardActivity extends AbstractActivity {
 
@@ -20,9 +22,14 @@ public class DashboardActivity extends AbstractActivity {
         super.onCreate(savedInstanceState);
         ((Application) getApplication()).getObjectGraph().inject(this);
         setContentView(R.layout.activity_dashboard);
+        initFooter();
+        initButtons();
+        checkIfUserWasConnected();
+    }
+
+    private void initFooter() {
         TextView footerTextView = (TextView) findViewById(R.id.footer_textview);
         footerTextView.setText(preferenceManager.getString(USER_NAME));
-        initButtons();
     }
 
     private void initButtons() {
@@ -43,6 +50,22 @@ public class DashboardActivity extends AbstractActivity {
                 overridePendingTransition(R.animator.activity_fadein, R.animator.activity_fadeout);
             }
         });
+
+        Button pendingImages = (Button) findViewById(R.id.btn_pending_images);
+        pendingImages.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DashboardActivity.this, PendingImagesActivity.class));
+                overridePendingTransition(R.animator.activity_fadein, R.animator.activity_fadeout);
+            }
+        });
+    }
+
+    private void checkIfUserWasConnected() {
+        Intent intent = getIntent();
+        if(intent.hasExtra(NO_CONNECTION)) {
+            Toast.makeText(this, getString(R.string.no_internet_dashboard), Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

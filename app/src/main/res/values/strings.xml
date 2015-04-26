@@ -41,4 +41,11 @@
     <string name="total_cost">Total cost:</string>
     <string name="loading_progress">Loading..</string>
     <string name="press_to_confirm">Press to confirm!</string>
+    <string name="pending_images">Pending images</string>
+    <string name="no_pending_images_found">No pending images found!</string>
+    <string name="images_posting_succeeded">Images posting succeeded</string>
+    <string name="no_internet_dashboard">No internet connection! Functionality is limited</string>
+    <string name="no_internet_connection_to_proceed">No internet connection to proceed!</string>
+    <string name="start_date_after_end">Start date cannot be after end date!</string>
+    <string name="end_date_cant_be_in_future">End date can\'t be in the future!</string>
 </resources>

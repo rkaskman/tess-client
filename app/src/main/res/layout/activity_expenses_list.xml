@@ -48,7 +48,6 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/spacing_micro"
             android:textSize="@dimen/text_size_small"
-            android:text="Start date cannot be after end date"
             android:textColor="@color/red_error"
             android:visibility="gone"/>
 
@@ -119,6 +118,9 @@
     <Button
         android:id="@+id/find_expenses_button"
         style="@style/BottomActionButton"
+
+        android:layout_marginLeft="@dimen/spacing_medium"
+        android:layout_marginRight="@dimen/spacing_medium"
         android:layout_marginTop="@dimen/spacing_minor"
         android:layout_alignParentBottom="true"
         android:text="@string/find" />

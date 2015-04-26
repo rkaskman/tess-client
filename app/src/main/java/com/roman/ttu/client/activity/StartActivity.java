@@ -45,6 +45,7 @@ public class StartActivity extends AbstractActivity {
     public static final int REQUEST_CODE_RECOVER_FROM_AUTH_ERROR = 1001;
     public static final int REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR = 1002;
     private static final String TAG = "StartActivity";
+    public static final String NO_CONNECTION = "noConnection";
 
     //TODO: replace with real for testing
     private String SENDER_ID = "413749891691";
@@ -105,15 +106,20 @@ public class StartActivity extends AbstractActivity {
 
     protected void establishSessionIfExpired() throws IOException, GoogleAuthException {
         if (!isDeviceOnline()) {
-            if(preferenceManager.hasPreference(GOOGLE_USER_EMAIL)) {
-//                Intent intent = new Intent();
-//                intent.putExtra()
+            if(preferenceManager.hasPreference(GOOGLE_USER_EMAIL) && isOnApplicationStartUp()) {
+                proceedToDashboardWithoutConnection();
             }
-            return;
         } else {
             new GoogleTokenRetriever(this, tokenRetrievalCallback,
                     preferenceManager.getString(GOOGLE_USER_EMAIL)).execute();
         }
+    }
+
+    private void proceedToDashboardWithoutConnection() {
+        Intent intent = new Intent(this, DashboardActivity.class);
+        intent.putExtra(NO_CONNECTION, true);
+        startActivity(intent);
+        finish();
     }
 
     @Override
@@ -202,7 +208,6 @@ public class StartActivity extends AbstractActivity {
                     .getPackageInfo(getPackageName(), 0);
             return packageInfo.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
-            // should never happen
             throw new RuntimeException("Could not get package name: " + e);
         }
     }

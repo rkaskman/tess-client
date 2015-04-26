@@ -5,13 +5,14 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
 import com.roman.ttu.client.Application;
 import com.roman.ttu.client.SharedPreferenceManager;
 
 import javax.inject.Inject;
 
-public abstract class AbstractActivity extends Activity {
+public abstract class AbstractActivity extends FragmentActivity {
 
     public static final String NO_CONNECTION_SESSION = "noConnectionSession";
 

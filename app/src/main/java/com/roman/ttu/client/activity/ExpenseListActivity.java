@@ -52,6 +52,8 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
     public static final String START_DATE_PICKER = "startDatePicker";
     public static final String END_DATE_PICKER = "endDatePicker";
+    public static final int CONFIRM_MENU_ITEM = 0;
+    public static final int REMOVE_MENU_ITEM = 1;
     private Calendar startDate;
     private Calendar endDate;
 
@@ -62,7 +64,7 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
     private TextView endDateTextView;
     private ListView expenseListView;
     private View errorLine;
-    private View errorText;
+    private TextView errorText;
 
     private long lastRequestedExpenseId = 0;
     private ExpenseAdapter expenseAdapter;
@@ -101,7 +103,7 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
         expenseListView = (ListView) findViewById(R.id.expense_list_view);
         findExpensesButton = (Button) findViewById(R.id.find_expenses_button);
         errorLine = findViewById(R.id.error_line);
-        errorText = findViewById(R.id.error_text);
+        errorText = (TextView) findViewById(R.id.error_text);
 
         startDateTextView.setText(DATE_FORMAT.format(startDate.getTime()));
         endDateTextView.setText(DATE_FORMAT.format(endDate.getTime()));
@@ -149,18 +151,33 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
     }
 
     private void findExpenses() {
-        ExpenseRequest request = createExpenseRequest();
-        if (startDate.after(endDate)) {
+        if(!validateDate()) {
             setErrorVisible(true);
-        } else {
-            setErrorVisible(false);
-            if (expenseAdapter != null) {
-                expenseAdapter.clear();
-            }
-            lastRequestedExpenseId = 0;
-            expenseService.get(request, expenseQueryCallback);
-            progressDialog.show();
+            return;
         }
+
+        ExpenseRequest request = createExpenseRequest();
+        setErrorVisible(false);
+        if (expenseAdapter != null) {
+            expenseAdapter.clear();
+        }
+        lastRequestedExpenseId = 0;
+        expenseService.get(request, expenseQueryCallback);
+        progressDialog.show();
+    }
+
+    private boolean validateDate() {
+        if(startDate.after(endDate)) {
+            errorText.setText(getString(R.string.start_date_after_end));
+            return false;
+        }
+
+        if(endDate.after(Calendar.getInstance())) {
+            errorText.setText(getString(R.string.end_date_cant_be_in_future));
+            return false;
+        }
+
+        return true;
     }
 
     private void createProgressDialog() {
@@ -225,7 +242,7 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
     private AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if(currentlySelectedExpenseView != null && currentlySelectedExpenseView.equals(view)
+            if (currentlySelectedExpenseView != null && currentlySelectedExpenseView.equals(view)
                     && isOverDelay()) {
                 view.setBackground(initialBackGroundDrawable);
                 currentlySelectedExpenseView = null;
@@ -236,22 +253,22 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
     };
 
     private boolean isOverDelay() {
-        return itemLongClicked != null && System.currentTimeMillis() - itemLongClicked  > ITEM_CLICK_DELAY;
+        return itemLongClicked != null && System.currentTimeMillis() - itemLongClicked > ITEM_CLICK_DELAY;
     }
 
     private OnItemLongClickListener itemLongClickListener = new OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            if(currentlySelectedExpense != null) {
+            if (currentlySelectedExpense != null) {
                 return false;
             }
 
             Expense selectedExpense = expenseAdapter.getExpenses().get(position);
-            if(selectedExpense == null || !ExpenseAdapter.STATE_INITIAL.equals(selectedExpense.state)) {
+            if (selectedExpense == null || !ExpenseAdapter.STATE_INITIAL.equals(selectedExpense.state)) {
                 return false;
             }
 
-            if(initialBackGroundDrawable == null) {
+            if (initialBackGroundDrawable == null) {
                 initialBackGroundDrawable = view.getBackground();
             }
 
@@ -260,7 +277,7 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
             currentlySelectedExpenseView = view;
             setMenuVisible(true);
             itemLongClicked = System.currentTimeMillis();
-            return true;
+            return false;
         }
     };
 
@@ -309,7 +326,7 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
                 }
                 lastRequestedExpenseId = expenses.get(expenses.size() - 1).id;
             }
-            expensesScrollListener.lastItemReached = expenseResponseContainer.lastReached ;
+            expensesScrollListener.lastItemReached = expenseResponseContainer.lastReached;
         }
 
         @Override
@@ -324,7 +341,7 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
         this.menu = menu;
         getMenuInflater().inflate(R.menu.expense_list_menu, this.menu);
 
-        menu.getItem(0).setOnMenuItemClickListener(new OnMenuItemClickListener() {
+        menu.getItem(CONFIRM_MENU_ITEM).setOnMenuItemClickListener(new OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 progressDialog.show();
@@ -333,7 +350,7 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
             }
         });
 
-        menu.getItem(1).setOnMenuItemClickListener(new OnMenuItemClickListener() {
+        menu.getItem(REMOVE_MENU_ITEM).setOnMenuItemClickListener(new OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 progressDialog.show();
@@ -377,12 +394,16 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
 
     private void removeExpense() {
         AnimationListener animationListener = new AnimationListener() {
-            @Override public void onAnimationStart(Animation animation) {}
-            @Override public void onAnimationRepeat(Animation animation) {}
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                expenseAdapter.removeWithoutNotification(currentlySelectedExpense);
                 deselectItemAndHideMenu();
             }
         };
@@ -396,12 +417,12 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
             protected void applyTransformation(float interpolatedTime, Transformation t) {
                 if (interpolatedTime == 1) {
                     view.setVisibility(View.GONE);
-                }
-                else {
-                    view.getLayoutParams().height = height - (int)(height * interpolatedTime);
+                } else {
+                    view.getLayoutParams().height = height - (int) (height * interpolatedTime);
                     view.requestLayout();
                 }
             }
+
             @Override
             public boolean willChangeBounds() {
                 return true;

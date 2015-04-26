@@ -1,6 +1,7 @@
 package com.roman.ttu.client.adapter;
 
 import android.content.Context;
+import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,9 +39,9 @@ public class ExpenseAdapter extends ArrayAdapter<Expense> {
 
     @Override
     public View getView(int position, View expenseView, ViewGroup parent) {
-        if (expenseView != null) {
-            return expenseView;
-        }
+//        if (expenseView != null) {
+//            return expenseView;
+//        }
 
         Expense expense = expenses.get(position);
         expenseView = layoutInflater.inflate(resource, null);

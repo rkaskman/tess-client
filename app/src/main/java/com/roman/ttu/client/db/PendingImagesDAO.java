@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import com.roman.ttu.client.model.ImagesWrapper;
 import com.roman.ttu.client.model.UserImagesWrapper;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -23,6 +25,8 @@ public class PendingImagesDAO {
     public PendingImagesDAO(Context context) {
         dbHelper = new TessClientDatabaseHelper(context);
     }
+
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public void save(ImagesWrapper imagesWrapper, String userId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -49,6 +53,7 @@ public class PendingImagesDAO {
                 UserPendingImages.COLUMN_NAME_ENTERPRISE_ID_IMAGE,
                 UserPendingImages.COLUMN_NAME_ENTERPRISE_ID_FILE_EXTENSION,
                 UserPendingImages.COLUMN_NAME_TOTAL_COST_IMAGE,
+                UserPendingImages.COLUMN_NAME_TOTAL_COST_FILE_EXTENSION,
                 UserPendingImages.COLUMN_NAME_USER_ID,
                 UserPendingImages.COLUMN_NAME_INSERTED_AT
 
@@ -69,20 +74,33 @@ public class PendingImagesDAO {
         return mapUserPendingImages(c);
     }
 
+    public void delete(int id) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete(UserPendingImages.TABLE_NAME, UserPendingImages._ID + "=?", new String[]{String.valueOf(id)});
+    }
+
     private Collection<UserImagesWrapper> mapUserPendingImages(Cursor c) {
         Set<UserImagesWrapper> userImages = new HashSet<>();
-        if(c != null && c.moveToFirst()) {
+        if (c != null && c.moveToFirst()) {
             do {
                 int id = c.getInt(c.getColumnIndex(UserPendingImages._ID));
                 String enterpriseIdImage = c.getString(c.getColumnIndex(UserPendingImages.COLUMN_NAME_ENTERPRISE_ID_IMAGE));
                 String enterpriseIdFileExtension = c.getString(c.getColumnIndex(UserPendingImages.COLUMN_NAME_ENTERPRISE_ID_FILE_EXTENSION));
                 String totalCostImage = c.getString(c.getColumnIndex(UserPendingImages.COLUMN_NAME_TOTAL_COST_IMAGE));
                 String totalCostFileExtension = c.getString(c.getColumnIndex(UserPendingImages.COLUMN_NAME_TOTAL_COST_FILE_EXTENSION));
-                Object insertedAt = c.getString(c.getColumnIndex(UserPendingImages.COLUMN_NAME_INSERTED_AT));
+                String insertedAtString = c.getString(c.getColumnIndex(UserPendingImages.COLUMN_NAME_INSERTED_AT));
+
+
+                Date insertedAt;
+                try {
+                    insertedAt = parseDate(insertedAtString);
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
 
                 UserImagesWrapper userImagesWrapper = new UserImagesWrapper(id, new ImageWrapper(enterpriseIdImage, enterpriseIdFileExtension),
                         new ImageWrapper(totalCostImage, totalCostFileExtension),
-                        new Date());
+                        insertedAt);
 
                 userImages.add(userImagesWrapper);
 
@@ -90,5 +108,9 @@ public class PendingImagesDAO {
         }
 
         return userImages;
+    }
+
+    private Date parseDate(String insertedAtString) throws ParseException {
+        return SDF.parse(insertedAtString);
     }
 }

@@ -1,6 +1,9 @@
 package com.roman.ttu.client.util;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.text.TextUtils;
+import android.util.Base64;
 
 import java.io.*;
 
@@ -33,5 +36,10 @@ public class IOUtil {
         if(f != null && f.exists()) {
             f.delete();
         }
+    }
+
+    public static Bitmap decodeBase64Image(String base64Image) {
+        byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 }

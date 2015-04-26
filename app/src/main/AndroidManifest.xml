@@ -31,22 +31,22 @@
         <activity android:name="com.roman.ttu.client.activity.ReceiptPictureTakingActivity" android:screenOrientation="portrait" />
         <activity android:name="com.roman.ttu.client.activity.ImageEditingActivity" android:screenOrientation="portrait"/>
         <activity android:name="com.roman.ttu.client.activity.AuthErrorActivity" android:theme="@android:style/Theme.Material.NoActionBar"/>
-        <activity android:name="com.roman.ttu.client.activity.ResponseHandlingActivity" android:theme="@android:style/Theme.Material.NoActionBar"/>
+        <activity android:name="com.roman.ttu.client.activity.ResponseHandlingActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.Material.NoActionBar"/>
+        <activity android:name="com.roman.ttu.client.activity.PendingImagesActivity" android:screenOrientation="portrait" android:parentActivityName="com.roman.ttu.client.activity.DashboardActivity"/>
+        <activity android:name="com.roman.ttu.client.activity.NoConnectionActivity" android:screenOrientation="portrait" android:parentActivityName="com.roman.ttu.client.activity.DashboardActivity"/>
+
         <activity android:name="com.roman.ttu.client.activity.ExpenseListActivity"
+            android:screenOrientation="portrait"
             android:parentActivityName="com.roman.ttu.client.activity.DashboardActivity"
             />
 
-        <activity android:name="com.roman.ttu.client.activity.StartActivity" android:theme="@android:style/Theme.Material.NoActionBar">
+        <activity android:name="com.roman.ttu.client.activity.StartActivity" android:theme="@android:style/Theme.Material.NoActionBar" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name="com.roman.ttu.client.activity.DashboardActivity">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN"/>-->
-                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
-            <!--</intent-filter>-->
         </activity>
 
         <receiver

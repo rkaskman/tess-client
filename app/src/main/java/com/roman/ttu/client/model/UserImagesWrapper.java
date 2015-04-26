@@ -1,9 +1,10 @@
 package com.roman.ttu.client.model;
 
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class UserImagesWrapper extends ImagesWrapper {
+public class UserImagesWrapper extends ImagesWrapper implements Serializable {
     public int id;
     public Date creationTime;
 

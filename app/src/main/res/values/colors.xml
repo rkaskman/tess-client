@@ -6,4 +6,5 @@
     <item name="red_error" type="color">#ffff655d</item>
     <item name="dark_gray" type="color">#aaa</item>
     <item name="very_dark_gray" type="color">#ff5d5d5d</item>
+    <item name="white" type="color">#fff</item>
 </resources>

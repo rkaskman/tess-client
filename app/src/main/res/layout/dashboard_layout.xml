@@ -16,4 +16,11 @@
         android:drawableTop="@drawable/button_list_expenses"
         android:text="@string/list_expenses"
         />
+
+
+    <Button android:id="@+id/btn_pending_images"
+        style="@style/DashboardButton"
+        android:drawableTop="@drawable/button_pending_images"
+        android:text="@string/pending_images"
+        />
 </com.roman.ttu.client.layout.DashboardLayout>

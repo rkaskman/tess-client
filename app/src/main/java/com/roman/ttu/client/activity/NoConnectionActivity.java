@@ -5,11 +5,10 @@ import android.os.Bundle;
 
 import com.roman.ttu.client.R;
 
-public class AuthErrorActivity extends Activity{
-
+public class NoConnectionActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_auth_error);
+        setContentView(R.layout.activity_no_connection);
     }
 }

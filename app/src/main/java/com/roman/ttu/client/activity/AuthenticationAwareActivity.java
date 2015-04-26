@@ -19,6 +19,9 @@ public abstract class AuthenticationAwareActivity extends AbstractActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!isDeviceOnline()) {
+            showNoConnectionAvailableError();
+        }
         createProgressDialog();
     }
 
@@ -26,13 +29,20 @@ public abstract class AuthenticationAwareActivity extends AbstractActivity {
     protected void onResume() {
         super.onResume();
         if (preferenceManager.hasPreference(SharedPreferenceManager.GOOGLE_USER_EMAIL) && sessionExpired()) {
-            if(isDeviceOnline()) {
+            if (isDeviceOnline()) {
                 Intent intent = new Intent(AuthenticationAwareActivity.this, StartActivity.class);
                 startActivityForResult(intent, StartActivity.REQUEST_AUTH_CODE);
             } else {
-
+                showNoConnectionAvailableError();
             }
         }
+    }
+
+    protected void showNoConnectionAvailableError() {
+        Intent intent = new Intent(AuthenticationAwareActivity.this, NoConnectionActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.animator.activity_fadein, R.animator.activity_fadeout);
+        finish();
     }
 
     protected boolean sessionExpired() {

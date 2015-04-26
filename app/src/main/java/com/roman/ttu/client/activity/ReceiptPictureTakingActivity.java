@@ -219,6 +219,11 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
         }
     }
 
+    @Override
+    protected void showNoConnectionAvailableError() {
+        //allow to work offline
+    }
+
     private void sendImages() {
         if (!sessionExpired()) {
             setPhase(Phase.SENDING);

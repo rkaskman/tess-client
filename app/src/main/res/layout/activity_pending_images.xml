@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/images_page_indicator"
+        android:layout_marginTop="@dimen/spacing_minor">
+
+    </android.support.v4.view.ViewPager>
+
+    <com.viewpagerindicator.UnderlinePageIndicator
+        android:id="@+id/images_page_indicator"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/spacing_micro"
+        android:layout_above="@+id/buttons_bottom"
+        app:selectedColor="@color/white" />
+
+    <LinearLayout
+        android:id="@+id/buttons_bottom"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/spacing_medium"
+        android:layout_marginLeft="@dimen/spacing_medium"
+        android:layout_marginRight="@dimen/spacing_medium"
+        android:layout_marginTop="@dimen/spacing_minor">
+
+        <Button
+            android:id="@+id/button_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/spacing_micro"
+            android:layout_weight="1"
+            android:background="@color/button_background_primary"
+            android:text="Send"
+            android:textColor="@color/button_text_color_primary"></Button>
+
+        <Button
+            android:id="@+id/button_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/spacing_micro"
+            android:layout_weight="1"
+            android:background="@color/button_background_primary"
+            android:text="Delete"
+            android:textColor="@color/button_text_color_primary"></Button>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/no_images_to_send"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_large"
+            android:textStyle="bold"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/no_pending_images_found"/>
+
+        </RelativeLayout>
+</RelativeLayout>

@@ -15,6 +15,9 @@ import com.roman.ttu.client.model.RecognizedReceiptData;
 import com.roman.ttu.client.rest.ExpenseService;
 import com.roman.ttu.client.service.AuthenticationAwareActivityCallback;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import javax.inject.Inject;
 
 import retrofit.RetrofitError;
@@ -61,7 +64,9 @@ import retrofit.RetrofitError;
         company.setText(recognizedReceiptData.companyName);
 
         TextView totalCost = (TextView) layoutRecognitionSuccessful.findViewById(R.id.total_cost);
-        totalCost.setText(recognizedReceiptData.totalCost.toString() + " " + recognizedReceiptData.currency);
+
+        BigDecimal formattedTotalCost = recognizedReceiptData.totalCost.setScale(2, RoundingMode.HALF_UP);
+        totalCost.setText(formattedTotalCost.toString() + " " + recognizedReceiptData.currency);
 
         View buttonsHolder = findViewById(R.id.buttons_success);
         buttonsHolder.setVisibility(View.VISIBLE);
