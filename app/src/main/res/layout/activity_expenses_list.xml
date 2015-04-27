@@ -37,9 +37,7 @@
             android:layout_marginTop="@dimen/spacing_micro"
             android:layout_below="@id/from"
             android:background="@android:color/darker_gray"
-            android:visibility="visible"
-
-            />
+            android:visibility="visible"/>
 
         <TextView
             android:id="@+id/error_text"

@@ -1,5 +1,6 @@
 package com.roman.ttu.client.rest;
 
+import com.roman.ttu.client.model.ExpenseInput;
 import com.roman.ttu.client.model.ExpenseRequest;
 import com.roman.ttu.client.model.ExpenseResponseContainer;
 
@@ -19,4 +20,7 @@ public interface ExpenseService {
 
     @POST("/expense/decline/{recognitionId}")
     void decline(@Path("recognitionId") String recognitionId, Callback<Object> callback);
+
+    @POST("/expense/submitManually")
+    void submitManually(@Body ExpenseInput input, Callback<Object> callback);
 }
