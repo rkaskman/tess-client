@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.roman.ttu.client.R;
 import com.roman.ttu.client.model.ExpenseResponseContainer;
+import com.roman.ttu.client.util.Util;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -53,7 +54,7 @@ public class ExpenseAdapter extends ArrayAdapter<Expense> {
         expenseEnterprise.setText(expense.companyName);
 
         TextView expenseSum = (TextView) expenseView.findViewById(R.id.expense_sum);
-        expenseSum.setText(new BigDecimal(expense.sum).setScale(2, BigDecimal.ROUND_HALF_UP).toString()
+        expenseSum.setText(Util.format(expense.sum).toString()
                 + " " + expense.currency);
 
         if (STATE_INITIAL.equals(expense.state)) {

@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.roman.ttu.client.ApplicationHolder;
 import com.roman.ttu.client.R;
 import com.roman.ttu.client.SharedPreferenceManager;
 import com.roman.ttu.client.adapter.PendingImagesAdapter;

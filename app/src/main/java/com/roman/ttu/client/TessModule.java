@@ -37,7 +37,9 @@ import dagger.Provides;
                 ResponseHandlingActivity.ResponseHandlingActivityCallback.class,
                 PendingImagesActivity.class,
                 PendingImagesActivity.ImagesPostingCallBack.class,
-                ManualExpenseSubmissionActivity.SubmissionCallback.class})
+                ManualExpenseSubmissionActivity.class,
+                ManualExpenseSubmissionActivity.SubmissionCallback.class,
+                ManualExpenseSubmissionActivity.ResponseHandlingActivityCallback.class})
 public class TessModule {
 
     public TessModule(Context context) {

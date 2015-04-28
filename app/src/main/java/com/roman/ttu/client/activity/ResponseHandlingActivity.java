@@ -101,7 +101,7 @@ import retrofit.RetrofitError;
         buttonsHolder.setVisibility(View.VISIBLE);
 
         Button retryTakingPicturesButton = (Button) buttonsHolder.findViewById(R.id.button_retry_taking_pictures);
-        Button ignoreErrorButton = (Button) buttonsHolder.findViewById(R.id.button_ignore);
+        Button submitManually = (Button) buttonsHolder.findViewById(R.id.button_submit_manually);
 
         retryTakingPicturesButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,9 +112,12 @@ import retrofit.RetrofitError;
             }
         });
 
-        ignoreErrorButton.setOnClickListener(new View.OnClickListener() {
+        submitManually.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(ResponseHandlingActivity.this, ManualExpenseSubmissionActivity.class);
+                startActivity(intent);
+                finish();
                 finish();
             }
         });

@@ -48,4 +48,7 @@
     <string name="no_internet_connection_to_proceed">No internet connection to proceed!</string>
     <string name="start_date_after_end">Start date cannot be after end date!</string>
     <string name="end_date_cant_be_in_future">End date can\'t be in the future!</string>
+    <string name="confirm_expense">Confirm the following expense</string>
+    <string name="submit_manually">Submit manually</string>
+    <string name="enter_new_expense">Enter new expense</string>
 </resources>

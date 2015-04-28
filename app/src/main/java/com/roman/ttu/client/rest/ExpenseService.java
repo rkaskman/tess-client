@@ -10,6 +10,8 @@ import retrofit.http.Body;
 import retrofit.http.POST;
 import retrofit.http.Path;
 
+import static com.roman.ttu.client.model.ExpenseResponseContainer.Expense;
+
 public interface ExpenseService {
 
     @POST("/expense/forUserAndPeriod")
@@ -22,5 +24,5 @@ public interface ExpenseService {
     void decline(@Path("recognitionId") String recognitionId, Callback<Object> callback);
 
     @POST("/expense/submitManually")
-    void submitManually(@Body ExpenseInput input, Callback<Object> callback);
+    void submitManually(@Body ExpenseInput input, Callback<Expense> callback);
 }

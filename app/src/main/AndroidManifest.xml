@@ -34,7 +34,7 @@
         <activity android:name="com.roman.ttu.client.activity.ResponseHandlingActivity" android:screenOrientation="portrait"/>
         <activity android:name="com.roman.ttu.client.activity.PendingImagesActivity" android:screenOrientation="portrait" android:parentActivityName="com.roman.ttu.client.activity.DashboardActivity"/>
         <activity android:name="com.roman.ttu.client.activity.NoConnectionActivity" android:screenOrientation="portrait" android:parentActivityName="com.roman.ttu.client.activity.DashboardActivity"/>
-        <activity android:name="com.roman.ttu.client.activity.ManualExpenseSubmissionActivity" android:screenOrientation="portrait"/>
+        <activity android:name="com.roman.ttu.client.activity.ManualExpenseSubmissionActivity" android:screenOrientation="portrait" android:parentActivityName="com.roman.ttu.client.activity.DashboardActivity"/>
 
         <activity android:name="com.roman.ttu.client.activity.ExpenseListActivity"
             android:screenOrientation="portrait"

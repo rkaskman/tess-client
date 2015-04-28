@@ -23,4 +23,10 @@
         android:drawableTop="@drawable/button_pending_images"
         android:text="@string/pending_images"
         />
+
+    <Button android:id="@+id/insert_expense_manually"
+        style="@style/DashboardButton"
+        android:drawableTop="@drawable/add_expense"
+        android:text="@string/enter_new_expense"
+        />
 </com.roman.ttu.client.layout.DashboardLayout>

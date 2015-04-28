@@ -59,6 +59,15 @@ public class DashboardActivity extends AbstractActivity {
                 overridePendingTransition(R.animator.activity_fadein, R.animator.activity_fadeout);
             }
         });
+
+        Button insertExpenseManually = (Button) findViewById(R.id.insert_expense_manually);
+        insertExpenseManually.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DashboardActivity.this, ManualExpenseSubmissionActivity.class));
+                overridePendingTransition(R.animator.activity_fadein, R.animator.activity_fadeout);
+            }
+        });
     }
 
     private void checkIfUserWasConnected() {

@@ -5,17 +5,22 @@
     android:paddingLeft="@dimen/spacing_medium"
     android:paddingRight="@dimen/spacing_medium">
 
+    <RelativeLayout
+        android:id="@+id/submission_stage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
     <LinearLayout
         android:id="@+id/reg_nr_layout"
         android:layout_width="match_parent"
         android:layout_alignParentTop="true"
-        android:layout_height="64dp"
+        android:layout_height="74dp"
         android:layout_marginTop="@dimen/spacing_xlarge"
         android:orientation="vertical">
         <EditText
             android:id="@+id/reg_nr_value"
             android:layout_width="match_parent"
-            android:layout_height="32dp"
+            android:layout_height="wrap_content"
             android:inputType="number"
             android:hint="Company reg. number"/>
         <View
@@ -39,7 +44,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="74dp"
         android:layout_marginTop="@dimen/spacing_medium"
         android:layout_below="@+id/reg_nr_layout"
         android:orientation="vertical">
@@ -47,7 +52,7 @@
             android:id="@+id/total_cost_value"
             android:layout_width="match_parent"
             android:inputType="numberDecimal"
-            android:layout_height="32dp"
+            android:layout_height="wrap_content"
             android:hint="Total cost"/>
         <View
             android:id="@+id/error_line_total_cost"
@@ -74,4 +79,128 @@
         android:layout_marginTop="@dimen/spacing_minor"
         android:layout_alignParentBottom="true"
         android:text="Submit" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/confirmation_stage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/image_recognition_succeeded"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_send_white_48dp"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/spacing_xlarge"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true" />
+
+        <TextView
+            android:id="@+id/header_submission_succeeded"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_minor"
+            android:text="@string/confirm_expense"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/image_recognition_succeeded"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_size_medium" />
+
+        <TextView
+            android:id="@+id/header_reg_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_minor"
+            android:layout_below="@+id/header_submission_succeeded"
+            android:layout_marginTop="@dimen/spacing_minor"
+            android:text="@string/reg_number"
+            android:textSize="@dimen/text_size_medium" />
+
+        <TextView
+            android:id="@+id/reg_number"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_minor"
+            android:layout_marginTop="@dimen/spacing_minor"
+            android:textSize="@dimen/text_size_medium"
+            android:layout_below="@+id/header_submission_succeeded"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/header_reg_number" />
+
+        <TextView
+            android:id="@+id/header_company"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_minor"
+            android:layout_below="@+id/header_reg_number"
+            android:layout_marginTop="@dimen/spacing_minor"
+            android:text="@string/header_company"
+            android:textSize="@dimen/text_size_medium" />
+
+        <TextView
+            android:id="@+id/company"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_minor"
+            android:layout_marginTop="@dimen/spacing_minor"
+            android:textSize="@dimen/text_size_medium"
+            android:layout_below="@+id/header_reg_number"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/header_company" />
+
+        <TextView
+            android:id="@+id/header_total_cost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_minor"
+            android:layout_below="@+id/header_company"
+            android:layout_marginTop="@dimen/spacing_minor"
+            android:text="@string/total_cost"
+            android:textSize="@dimen/text_size_medium" />
+
+        <TextView
+            android:id="@+id/total_cost"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_minor"
+            android:layout_marginTop="@dimen/spacing_minor"
+            android:textSize="@dimen/text_size_medium"
+            android:textStyle="bold"
+            android:layout_below="@+id/header_company"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/header_total_cost" />
+
+        <LinearLayout
+            android:id="@+id/buttons_success"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/spacing_medium">
+
+            <Button
+                android:id="@+id/button_confirm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/spacing_micro"
+                android:layout_weight="1"
+                android:background="@color/button_background_primary"
+                android:text="@string/confirm"
+                android:textColor="@color/button_text_color_primary"></Button>
+
+            <Button
+                android:id="@+id/button_decline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/spacing_micro"
+                android:layout_weight="1"
+                android:background="@color/button_background_primary"
+                android:text="@string/decline"
+                android:textColor="@color/button_text_color_primary"></Button>
+        </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>
