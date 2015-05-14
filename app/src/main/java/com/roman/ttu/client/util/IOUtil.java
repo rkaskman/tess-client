@@ -32,7 +32,7 @@ public class IOUtil {
         return !isEmpty(fileName) && extensionSeparatorIndex > 0 ? fileName.substring(extensionSeparatorIndex + 1) : null;
     }
 
-    public static void deleteFile(File f) {
+    public static void safeDeleteFile(File f) {
         if(f != null && f.exists()) {
             f.delete();
         }

@@ -15,6 +15,7 @@ import com.roman.ttu.client.rest.ExpenseService;
 import com.roman.ttu.client.rest.ImagePostingService;
 import com.roman.ttu.client.rest.RestClient;
 import com.roman.ttu.client.rest.SignInService;
+import com.roman.ttu.client.rest.security.CertificateTrustManager;
 import com.roman.ttu.client.service.AuthenticationAwareActivityCallback;
 
 import javax.inject.Singleton;
@@ -50,8 +51,20 @@ public class TessModule {
 
     @Provides
     @Singleton
-    RestClient provideRestClient() {
-        return new RestClient();
+    Configuration provideConfiguration() {
+        return new Configuration(context);
+    }
+
+    @Provides
+    @Singleton
+    CertificateTrustManager provideCertTrustManager(Configuration configuration) {
+        return new CertificateTrustManager(configuration, context);
+    }
+
+    @Provides
+    @Singleton
+    RestClient provideRestClient(Configuration configuration, CertificateTrustManager certificateTrustManager) {
+        return new RestClient(configuration, certificateTrustManager);
     }
 
     @Provides

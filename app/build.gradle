@@ -26,4 +26,5 @@ dependencies {
     compile 'com.squareup.dagger:dagger:1.2.1'
     compile 'org.apache.commons:commons-lang3:3.0'
     compile 'com.inkapplications.viewpageindicator:library:2.4.3'
+    compile 'org.bouncycastle:bcprov-jdk16:1.45'
 }

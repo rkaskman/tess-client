@@ -6,8 +6,6 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.0.0'
-//        classpath 'com.squareup.okhttp:okhttp:2.1.0'
-//        classpath 'com.squareup.okhttp:okhttp-urlconnection:2.1.0'
     }
 }
 

@@ -8,7 +8,6 @@ import android.widget.Toast;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
-import com.roman.ttu.client.activity.AuthenticationAwareActivity;
 import com.roman.ttu.client.activity.StartActivity;
 
 import java.io.IOException;

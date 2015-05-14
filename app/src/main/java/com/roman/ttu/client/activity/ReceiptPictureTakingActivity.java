@@ -34,7 +34,6 @@ import retrofit.client.Response;
 
 import static com.roman.ttu.client.SharedPreferenceManager.GCM_REGISTRATION_ID;
 import static com.roman.ttu.client.SharedPreferenceManager.USER_ID;
-import static com.roman.ttu.client.activity.ImageEditingActivity.IMAGE_FILE;
 import static com.roman.ttu.client.model.ImagesWrapper.ImageWrapper;
 import static com.roman.ttu.client.util.IOUtil.getFileExtension;
 
@@ -55,10 +54,8 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
     private File imageWithTotalCost;
 
     private File firstImage;
-    private File secondImage;
 
     private Uri firstImageUri;
-    private Uri secondImageUri;
 
     private ImagesWrapper imagesWrapper;
 
@@ -145,10 +142,6 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
             firstImageUri = getOutputMediaFileUri(firstImage);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, firstImageUri);
 
-        } else {
-            secondImage = getOutputMediaFile();
-            secondImageUri = getOutputMediaFileUri(secondImage);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, secondImageUri);
         }
 
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
@@ -159,24 +152,15 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
         super.onActivityResult(requestCode, resultCode, intent);
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                editImage();
-            } else {
-                clearFiles();
-            }
-        }
-
-        if (requestCode == EDIT_IMAGE && resultCode == RESULT_OK) {
-            if (resultCode == RESULT_OK) {
-                File editedImageFile = (File) intent.getSerializableExtra(IMAGE_FILE);
                 try {
-                    resolveEditedImage(editedImageFile);
+                    resolveImage();
                 } catch (IOException e) {
                     Toast.makeText(this, "Failed to read image files", Toast.LENGTH_LONG).show();
                 }
-            } else {
-                clearFiles();
             }
+
         }
+
 
         if (requestCode == REQUEST_CODE_POST_IMAGES_LOGIN) {
             if (resultCode == RESULT_OK) {
@@ -188,28 +172,16 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
         }
     }
 
-    private void editImage() {
-        Intent imageEditingIntent = new Intent(this, ImageEditingActivity.class);
-        imageEditingIntent.putExtra("imageFileUri", imageWithRegNumber == null ? firstImageUri : secondImageUri);
-        imageEditingIntent.putExtra("toastMessage",
-                imageWithRegNumber == null ? "Mark registration number" : "Mark total cost");
-        startActivityForResult(imageEditingIntent, EDIT_IMAGE);
-    }
-
-    private void resolveEditedImage(File editedImageFile) throws IOException {
+    private void resolveImage() throws IOException {
         if (imageWithRegNumber == null) {
-            imageWithRegNumber = editedImageFile;
-            startCamera();
-
-        } else if (imageWithTotalCost == null) {
-            imageWithTotalCost = editedImageFile;
+            imageWithRegNumber = firstImage;
             processImages();
         }
     }
 
     private void processImages() throws IOException {
         imagesWrapper = new ImagesWrapper(getImageWrapperFor(imageWithRegNumber),
-                getImageWrapperFor(imageWithTotalCost));
+                new ImageWrapper(null, null));
         imagesWrapper.registrationId = preferenceManager.getString(GCM_REGISTRATION_ID);
 
         if (isDeviceOnline()) {
@@ -291,18 +263,15 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
     }
 
     private void clearFiles() {
-        IOUtil.deleteFile(firstImage);
-        IOUtil.deleteFile(secondImage);
-        IOUtil.deleteFile(imageWithRegNumber);
-        IOUtil.deleteFile(imageWithTotalCost);
+        IOUtil.safeDeleteFile(firstImage);
+        IOUtil.safeDeleteFile(imageWithRegNumber);
+        IOUtil.safeDeleteFile(imageWithTotalCost);
 
         firstImage = null;
-        secondImage = null;
         imageWithRegNumber = null;
         imageWithTotalCost = null;
 
         firstImageUri = null;
-        secondImageUri = null;
     }
 
     public class ImagePostingCallback extends AuthenticationAwareActivityCallback {

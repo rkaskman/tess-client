@@ -2,6 +2,8 @@ package com.roman.ttu.client.rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.roman.ttu.client.Configuration;
+import com.roman.ttu.client.rest.security.CertificateTrustManager;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.net.CookieHandler;
@@ -21,52 +23,47 @@ import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
 
 public class RestClient {
-    private static final String BASE_URL = "https://192.168.1.69:8999/";
     private RestAdapter restAdapter;
+    private Configuration configuration;
 
-    public RestClient() {
+    public RestClient(Configuration configuration, CertificateTrustManager certificateTrustManager) {
+        this.configuration = configuration;
+        createRestAdapter(certificateTrustManager);
+        initCookieManager();
+    }
+
+    private void initCookieManager() {
+        CookieManager cookieManager = new CookieManager();
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+        CookieHandler.setDefault(cookieManager);
+    }
+
+    private void createRestAdapter(CertificateTrustManager certificateTrustManager) {
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
                 .create();
 
         restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setEndpoint(BASE_URL)
+                .setEndpoint(composeUrl())
                 .setConverter(new GsonConverter(gson))
-                .setClient(getHttpClientForTestingPurposes())
+                .setClient(getHttpClientForTestingPurposes(certificateTrustManager))
                 .build();
+    }
 
-        CookieManager cookieManager = new CookieManager();
-        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
-        CookieHandler.setDefault(cookieManager);
+    private String composeUrl() {
+        return configuration.getBaseUrl().concat(":").concat(configuration.getPort());
     }
 
     public <T> T create(Class<T> serviceClass) {
         return restAdapter.create(serviceClass);
     }
 
-    private OkClient getHttpClientForTestingPurposes() {
+    private OkClient getHttpClientForTestingPurposes(CertificateTrustManager certificateTrustManager) {
         try {
-            // Create a trust manager that does not validate certificate chains
-            final TrustManager[] trustAllCerts = new TrustManager[]{
-                    new X509TrustManager() {
-                        @Override
-                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-                        }
-
-                        @Override
-                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-                        }
-
-                        @Override
-                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                            return null;
-                        }
-                    }
-            };
 
             final SSLContext sslContext = SSLContext.getInstance("SSL");
-            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+            sslContext.init(null, new TrustManager[] {certificateTrustManager}, new java.security.SecureRandom());
             final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 
             OkHttpClient okHttpClient = new OkHttpClient();
