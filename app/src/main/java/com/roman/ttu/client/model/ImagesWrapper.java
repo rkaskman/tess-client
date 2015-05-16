@@ -1,12 +1,12 @@
 package com.roman.ttu.client.model;
 
 public class ImagesWrapper {
-    public ImageWrapper regNumberImage;
+    public ImageWrapper receiptImage;
     public ImageWrapper totalCostImage;
     public String registrationId;
 
-    public ImagesWrapper(ImageWrapper regNumberImage, ImageWrapper totalCostImage) {
-        this.regNumberImage = regNumberImage;
+    public ImagesWrapper(ImageWrapper receiptImage, ImageWrapper totalCostImage) {
+        this.receiptImage = receiptImage;
         this.totalCostImage = totalCostImage;
     }
 

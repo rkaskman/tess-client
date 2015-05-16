@@ -31,16 +31,12 @@ public class PendingImagesDAO {
     public void save(ImagesWrapper imagesWrapper, String userId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        ImageWrapper regNumberImageWrapper = imagesWrapper.regNumberImage;
-        ImageWrapper totalCostImageWrapper = imagesWrapper.totalCostImage;
+        ImageWrapper regNumberImageWrapper = imagesWrapper.receiptImage;
 
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put(UserPendingImages.COLUMN_NAME_ENTERPRISE_ID_IMAGE, regNumberImageWrapper.encodedImage);
-        contentValues.put(UserPendingImages.COLUMN_NAME_ENTERPRISE_ID_FILE_EXTENSION, regNumberImageWrapper.fileExtension);
-
-        contentValues.put(UserPendingImages.COLUMN_NAME_TOTAL_COST_IMAGE, totalCostImageWrapper.encodedImage);
-        contentValues.put(UserPendingImages.COLUMN_NAME_TOTAL_COST_FILE_EXTENSION, totalCostImageWrapper.fileExtension);
+        contentValues.put(UserPendingImages.COLUMN_NAME_RECEIPT_IMAGE, regNumberImageWrapper.encodedImage);
+        contentValues.put(UserPendingImages.COLUMN_NAME_RECEIPT_IMAGE_EXTENSION, regNumberImageWrapper.fileExtension);
         contentValues.put(UserPendingImages.COLUMN_NAME_USER_ID, userId);
         db.insert(UserPendingImages.TABLE_NAME, null, contentValues);
     }
@@ -50,13 +46,11 @@ public class PendingImagesDAO {
 
         String[] projection = {
                 UserPendingImages._ID,
-                UserPendingImages.COLUMN_NAME_ENTERPRISE_ID_IMAGE,
-                UserPendingImages.COLUMN_NAME_ENTERPRISE_ID_FILE_EXTENSION,
-                UserPendingImages.COLUMN_NAME_TOTAL_COST_IMAGE,
-                UserPendingImages.COLUMN_NAME_TOTAL_COST_FILE_EXTENSION,
+                UserPendingImages.COLUMN_NAME_RECEIPT_IMAGE,
+                UserPendingImages.COLUMN_NAME_RECEIPT_IMAGE_EXTENSION,
+
                 UserPendingImages.COLUMN_NAME_USER_ID,
                 UserPendingImages.COLUMN_NAME_INSERTED_AT
-
         };
 
         String selection = UserPendingImages.COLUMN_NAME_USER_ID + " = ?";
@@ -84,10 +78,8 @@ public class PendingImagesDAO {
         if (c != null && c.moveToFirst()) {
             do {
                 int id = c.getInt(c.getColumnIndex(UserPendingImages._ID));
-                String enterpriseIdImage = c.getString(c.getColumnIndex(UserPendingImages.COLUMN_NAME_ENTERPRISE_ID_IMAGE));
-                String enterpriseIdFileExtension = c.getString(c.getColumnIndex(UserPendingImages.COLUMN_NAME_ENTERPRISE_ID_FILE_EXTENSION));
-                String totalCostImage = c.getString(c.getColumnIndex(UserPendingImages.COLUMN_NAME_TOTAL_COST_IMAGE));
-                String totalCostFileExtension = c.getString(c.getColumnIndex(UserPendingImages.COLUMN_NAME_TOTAL_COST_FILE_EXTENSION));
+                String enterpriseIdImage = c.getString(c.getColumnIndex(UserPendingImages.COLUMN_NAME_RECEIPT_IMAGE));
+                String enterpriseIdFileExtension = c.getString(c.getColumnIndex(UserPendingImages.COLUMN_NAME_RECEIPT_IMAGE_EXTENSION));
                 String insertedAtString = c.getString(c.getColumnIndex(UserPendingImages.COLUMN_NAME_INSERTED_AT));
 
 
@@ -99,7 +91,7 @@ public class PendingImagesDAO {
                 }
 
                 UserImagesWrapper userImagesWrapper = new UserImagesWrapper(id, new ImageWrapper(enterpriseIdImage, enterpriseIdFileExtension),
-                        new ImageWrapper(totalCostImage, totalCostFileExtension),
+                        new ImageWrapper(null, null),
                         insertedAt);
 
                 userImages.add(userImagesWrapper);

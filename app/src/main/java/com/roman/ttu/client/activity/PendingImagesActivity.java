@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.roman.ttu.client.ApplicationHolder;
 import com.roman.ttu.client.R;
 import com.roman.ttu.client.SharedPreferenceManager;
 import com.roman.ttu.client.adapter.PendingImagesAdapter;
@@ -117,11 +116,9 @@ public class PendingImagesActivity extends AuthenticationAwareActivity {
 
             Bundle args = getArguments();
             UserImagesWrapper userImagesWrapper = (UserImagesWrapper) args.get(IMAGES_KEY);
-            Bitmap regNrImageBitmap = IOUtil.decodeBase64Image(userImagesWrapper.regNumberImage.encodedImage);
-            Bitmap totalCostImage = IOUtil.decodeBase64Image(userImagesWrapper.totalCostImage.encodedImage);
+            Bitmap receiptImageBitmap = IOUtil.decodeBase64Image(userImagesWrapper.receiptImage.encodedImage);
 
-            ((ImageView) rootView.findViewById(R.id.reg_number_image)).setImageBitmap(regNrImageBitmap);
-            ((ImageView) rootView.findViewById(R.id.total_cost_image)).setImageBitmap(totalCostImage);
+            ((ImageView) rootView.findViewById(R.id.receipt_image)).setImageBitmap(receiptImageBitmap);
 
             return rootView;
         }

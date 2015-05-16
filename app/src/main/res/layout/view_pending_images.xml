@@ -5,17 +5,9 @@
 
     <ImageView
         android:layout_marginTop="@dimen/spacing_medium"
-        android:id="@+id/reg_number_image"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        />
-
-    <ImageView
-        android:layout_below="@id/reg_number_image"
-        android:layout_marginTop="@dimen/spacing_minor"
-        android:id="@+id/total_cost_image"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:id="@+id/receipt_image"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"/>
 
 </RelativeLayout>
