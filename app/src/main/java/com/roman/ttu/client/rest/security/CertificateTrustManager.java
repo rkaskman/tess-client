@@ -34,34 +34,6 @@ import javax.security.auth.x500.X500Principal;
 public class CertificateTrustManager implements X509TrustManager {
     private Map<String, X509Certificate> trustedCerts = new HashMap<>();
 
-    public CertificateTrustManager(Configuration configuration, Context context) {
-        try {
-            KeyStore keyStore = readTrustStore(configuration, context);
-            List<String> keyStoreAliases = Collections.list(keyStore.aliases());
-            for (String alias : keyStoreAliases) {
-                X509Certificate certificate = (X509Certificate) keyStore.getCertificate(alias);
-                trustedCerts.put(getCnFor(certificate), certificate);
-            }
-        } catch (KeyStoreException | IOException | CertificateException | NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private String getCnFor(X509Certificate certificate) throws CertificateEncodingException {
-        X509Principal principal = PrincipalUtil.getSubjectX509Principal(certificate);
-        Vector<?> cnValues = principal.getValues(X509Name.CN);
-        return (String) cnValues.iterator().next();
-    }
-
-    private KeyStore readTrustStore(Configuration configuration, Context context) throws KeyStoreException,
-            IOException, CertificateException, NoSuchAlgorithmException {
-        KeyStore ks = KeyStore.getInstance("pkcs12");
-        AssetManager assetManager = context.getAssets();
-        InputStream is = assetManager.open("keystore.p12");
-        ks.load(is, configuration.getTrustStorePassword().toCharArray());
-        return ks;
-    }
-
     @Override
     public X509Certificate[] getAcceptedIssuers() {
         return new X509Certificate[0];
@@ -94,4 +66,33 @@ public class CertificateTrustManager implements X509TrustManager {
             throws CertificateException {
         checkTrusted(chain);
     }
+
+    public CertificateTrustManager(Configuration configuration, Context context) {
+        try {
+            KeyStore keyStore = readTrustStore(configuration, context);
+            List<String> keyStoreAliases = Collections.list(keyStore.aliases());
+            for (String alias : keyStoreAliases) {
+                X509Certificate certificate = (X509Certificate) keyStore.getCertificate(alias);
+                trustedCerts.put(getCnFor(certificate), certificate);
+            }
+        } catch (KeyStoreException | IOException | CertificateException | NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String getCnFor(X509Certificate certificate) throws CertificateEncodingException {
+        X509Principal principal = PrincipalUtil.getSubjectX509Principal(certificate);
+        Vector<?> cnValues = principal.getValues(X509Name.CN);
+        return (String) cnValues.iterator().next();
+    }
+
+    private KeyStore readTrustStore(Configuration configuration, Context context) throws KeyStoreException,
+            IOException, CertificateException, NoSuchAlgorithmException {
+        KeyStore ks = KeyStore.getInstance("pkcs12");
+        AssetManager assetManager = context.getAssets();
+        InputStream is = assetManager.open("keystore.p12");
+        ks.load(is, configuration.getTrustStorePassword().toCharArray());
+        return ks;
+    }
+
 }

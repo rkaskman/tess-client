@@ -95,6 +95,7 @@
             android:layout_width="16dp"
             android:layout_alignBottom="@+id/to_date"
             android:layout_alignParentEnd="true" />
+
     </RelativeLayout>
 
     <!--<View-->
@@ -104,13 +105,52 @@
         <!--android:layout_height="1dp"-->
         <!--android:background="@android:color/darker_gray"/>-->
 
+    <RelativeLayout
+        android:id="@+id/total_for_period"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:visibility="gone"
+        android:layout_below="@+id/date_chooser"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/spacing_medium"
+            android:text="Total for period:"
+            android:textSize="@dimen/text_size_medium"
+            android:textStyle="bold"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/total_sum_for_period"
+            style="@style/ExpenseSum"
+            android:paddingRight="@dimen/spacing_medium"
+            android:textSize="@dimen/text_size_large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2500 EUR"
+            android:textStyle="bold"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"/>
+
+        <View
+        android:id="@+id/separator"
+            android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
     <ListView
         android:id="@+id/expense_list_view"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_above="@+id/find_expenses_button"
-        android:layout_below="@+id/date_chooser"
-        android:layout_marginTop="@dimen/spacing_minor">
+        android:layout_below="@+id/total_for_period">
 
     </ListView>
     <Button
@@ -122,4 +162,5 @@
         android:layout_marginTop="@dimen/spacing_minor"
         android:layout_alignParentBottom="true"
         android:text="@string/find" />
+
 </RelativeLayout>

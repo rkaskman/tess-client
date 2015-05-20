@@ -25,9 +25,11 @@ import com.roman.ttu.client.rest.ExpenseService;
 import com.roman.ttu.client.model.ExpenseRequest;
 import com.roman.ttu.client.model.ExpenseResponseContainer;
 import com.roman.ttu.client.service.AuthenticationAwareActivityCallback;
+import com.roman.ttu.client.util.Util;
 
 import org.apache.commons.lang3.time.DateUtils;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -65,6 +67,7 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
     private ListView expenseListView;
     private View errorLine;
     private TextView errorText;
+    private View totalForPeriod;
 
     private long lastRequestedExpenseId = 0;
     private ExpenseAdapter expenseAdapter;
@@ -107,6 +110,8 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
 
         startDateTextView.setText(DATE_FORMAT.format(startDate.getTime()));
         endDateTextView.setText(DATE_FORMAT.format(endDate.getTime()));
+
+        totalForPeriod = findViewById(R.id.total_for_period);
 
         createProgressDialog();
 
@@ -151,7 +156,7 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
     }
 
     private void findExpenses() {
-        if(!validateDate()) {
+        if (!validateDate()) {
             setErrorVisible(true);
             return;
         }
@@ -160,6 +165,7 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
         setErrorVisible(false);
         if (expenseAdapter != null) {
             expenseAdapter.clear();
+            totalForPeriod.setVisibility(View.GONE);
         }
         lastRequestedExpenseId = 0;
         expenseService.get(request, expenseQueryCallback);
@@ -167,12 +173,12 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
     }
 
     private boolean validateDate() {
-        if(startDate.after(endDate)) {
+        if (startDate.after(endDate)) {
             errorText.setText(getString(R.string.start_date_after_end));
             return false;
         }
 
-        if(endDate.after(Calendar.getInstance())) {
+        if (endDate.after(Calendar.getInstance())) {
             errorText.setText(getString(R.string.end_date_cant_be_in_future));
             return false;
         }
@@ -317,6 +323,7 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
             progressDialog.dismiss();
             List<Expense> expenses = expenseResponseContainer.expenseList;
             if (!expenses.isEmpty()) {
+                showTotal(expenseResponseContainer);
                 if (expenseAdapter == null) {
                     expenseAdapter = new ExpenseAdapter(ExpenseListActivity.this, R.layout.view_expense_item,
                             expenses);
@@ -325,8 +332,22 @@ public class ExpenseListActivity extends AuthenticationAwareActivity {
                     expenseAdapter.addAll(expenses);
                 }
                 lastRequestedExpenseId = expenses.get(expenses.size() - 1).id;
+            } else {
+                totalForPeriod.setVisibility(View.GONE);
             }
             expensesScrollListener.lastItemReached = expenseResponseContainer.lastReached;
+        }
+
+        private void showTotal(ExpenseResponseContainer expenseResponseContainer) {
+
+            if (expenseResponseContainer.totalSum != null) {
+                totalForPeriod.setVisibility(View.VISIBLE);
+                TextView totalSumForPeriod = (TextView) findViewById(R.id.total_sum_for_period);
+                BigDecimal formattedTotalSum = Util.format(expenseResponseContainer.totalSum.toString());
+                String currency = expenseResponseContainer.expenseList.iterator().next().currency;
+                totalSumForPeriod.setText(formattedTotalSum + " " + currency);
+            }
+
         }
 
         @Override
