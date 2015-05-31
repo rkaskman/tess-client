@@ -11,7 +11,6 @@ public final class TessClientDatabase {
         public static final String TABLE_NAME = "user_pending_images";
         public static final String COLUMN_NAME_USER_ID = "user_id";
         public static final String COLUMN_NAME_RECEIPT_IMAGE = "receipt_image";
-        public static final String COLUMN_NAME_RECEIPT_IMAGE_EXTENSION = "receipt_image_ext";
         public static final String COLUMN_NAME_INSERTED_AT = "inserted_at";
     }
 }

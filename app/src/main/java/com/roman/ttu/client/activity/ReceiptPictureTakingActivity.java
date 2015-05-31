@@ -51,7 +51,6 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
     private Button retrySendButton;
 
     private File imageWithRegNumber;
-    private File imageWithTotalCost;
 
     private File firstImage;
 
@@ -101,7 +100,6 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
             @Override
             public void onClick(View v) {
                 imageWithRegNumber = null;
-                imageWithTotalCost = null;
                 startCamera();
             }
         });
@@ -124,7 +122,7 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
     }
 
     private void saveImages() {
-        pendingImagesDAO.save(imagesWrapper, preferenceManager.getString(USER_ID));
+        pendingImagesDAO.save(imageWithRegNumber, preferenceManager.getString(USER_ID));
         proceedToSuccessStage(true);
     }
 
@@ -158,9 +156,7 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
                     Toast.makeText(this, "Failed to read image files", Toast.LENGTH_LONG).show();
                 }
             }
-
         }
-
 
         if (requestCode == REQUEST_CODE_POST_IMAGES_LOGIN) {
             if (resultCode == RESULT_OK) {
@@ -180,11 +176,10 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
     }
 
     private void processImages() throws IOException {
-        imagesWrapper = new ImagesWrapper(getImageWrapperFor(imageWithRegNumber),
-                new ImageWrapper(null, null));
-        imagesWrapper.registrationId = preferenceManager.getString(GCM_REGISTRATION_ID);
-
         if (isDeviceOnline()) {
+            imagesWrapper = new ImagesWrapper(getImageWrapperFor(imageWithRegNumber),
+                    new ImageWrapper(null, null));
+            imagesWrapper.registrationId = preferenceManager.getString(GCM_REGISTRATION_ID);
             sendImages();
         } else {
             proposeToSaveImages();
@@ -218,13 +213,13 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
                 .setMessage(getString(R.string.no_connection_detected))
                 .setPositiveButton(getString(R.string.yes_button), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                       saveImages();
+                        saveImages();
                     }
                 })
                 .setNegativeButton(getString(R.string.no_button), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        clearFiles();
+                        clearFiles(false);
                     }
                 })
                 .show();
@@ -234,7 +229,7 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
         setPhase(Phase.SUCCESS);
         TextView imagesProceededView = (TextView) successView.findViewById(R.id.images_successfully_proceeded_info);
         imagesProceededView.setText(getString(imagesSaved ? R.string.images_saved_successfully : R.string.images_sent_successfully));
-        clearFiles();
+        clearFiles(imagesSaved);
     }
 
     private ImageWrapper getImageWrapperFor(File imageFile) throws IOException {
@@ -262,14 +257,14 @@ public class ReceiptPictureTakingActivity extends AuthenticationAwareActivity {
                 IMAGE_PREFIX + timeStamp + IMAGE_EXTENSION);
     }
 
-    private void clearFiles() {
-        IOUtil.safeDeleteFile(firstImage);
-        IOUtil.safeDeleteFile(imageWithRegNumber);
-        IOUtil.safeDeleteFile(imageWithTotalCost);
+    private void clearFiles(boolean imagesSaved) {
+        if (!imagesSaved) {
+            IOUtil.safeDeleteFile(firstImage);
+            IOUtil.safeDeleteFile(imageWithRegNumber);
+        }
 
         firstImage = null;
         imageWithRegNumber = null;
-        imageWithTotalCost = null;
 
         firstImageUri = null;
     }

@@ -10,7 +10,7 @@
     <string name="no_connection_detected">No internet connection detected. Do you wish to save images for further processing?</string>
     <string name="yes_button">Yes</string>
     <string name="no_button">No</string>
-    <string name="image_taking_explanation">Take two pictures: first of the enterprise registration number, second of purchase total cost</string>
+    <string name="image_taking_explanation">Take a picture of a receipt so that enterprise reg. number and total sum are visible.</string>
     <string name="images_taking_succeeded">Images taking succeeded</string>
     <string name="sending_images">Sending images...</string>
     <string name="take_new_pictures">Take new pictures</string>
@@ -24,7 +24,7 @@
     <string name="list_expenses">Show expenses</string>
     <string name="find">Find</string>
     <string name="error_gcm_reg">Error obtaining Google id for push notifications</string>
-    <string name="recognized_total_cost">Recognized total cost:</string>
+    <string name="recognized_total_cost">Recognized total sum:</string>
     <string name="recognized_reg_num">Recognized reg. number:</string>
     <string name="header_receipt_recogniton_failed">Recognition of receipt data failed!</string>
     <string name="notification_title_recognition_error">TessApp recognition error</string>
@@ -38,7 +38,7 @@
     <string name="ignore">Ignore</string>
     <string name="recognition_succeeded">Recognition succeeded!</string>
     <string name="reg_number">Reg. number:</string>
-    <string name="total_cost">Total cost:</string>
+    <string name="total_cost">Total sum:</string>
     <string name="loading_progress">Loading..</string>
     <string name="press_to_confirm">Press to confirm!</string>
     <string name="pending_images">Pending images</string>

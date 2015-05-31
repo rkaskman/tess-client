@@ -21,7 +21,6 @@ public class TessClientDatabaseHelper extends SQLiteOpenHelper {
                     UserPendingImages._ID + " INTEGER PRIMARY KEY," +
                     UserPendingImages.COLUMN_NAME_USER_ID + TEXT_TYPE + NOT_NULL + COMMA_SEP +
                     UserPendingImages.COLUMN_NAME_RECEIPT_IMAGE + TEXT_TYPE + NOT_NULL + COMMA_SEP +
-                    UserPendingImages.COLUMN_NAME_RECEIPT_IMAGE_EXTENSION + TEXT_TYPE + NOT_NULL + COMMA_SEP +
                     UserPendingImages.COLUMN_NAME_INSERTED_AT + TIMESTAMP_TYPE +
                     " DEFAULT CURRENT_TIMESTAMP" + NOT_NULL + ");";
 

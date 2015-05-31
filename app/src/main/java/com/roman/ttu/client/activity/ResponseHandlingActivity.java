@@ -118,7 +118,6 @@ import retrofit.RetrofitError;
                 Intent intent = new Intent(ResponseHandlingActivity.this, ManualExpenseSubmissionActivity.class);
                 startActivity(intent);
                 finish();
-                finish();
             }
         });
     }

@@ -5,9 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.roman.ttu.client.model.ImageStoredInDatabase;
 import com.roman.ttu.client.model.ImagesWrapper;
 import com.roman.ttu.client.model.UserImagesWrapper;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
@@ -28,27 +30,22 @@ public class PendingImagesDAO {
 
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    public void save(ImagesWrapper imagesWrapper, String userId) {
+    public void save(File receiptImage, String userId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        ImageWrapper regNumberImageWrapper = imagesWrapper.receiptImage;
 
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put(UserPendingImages.COLUMN_NAME_RECEIPT_IMAGE, regNumberImageWrapper.encodedImage);
-        contentValues.put(UserPendingImages.COLUMN_NAME_RECEIPT_IMAGE_EXTENSION, regNumberImageWrapper.fileExtension);
+        contentValues.put(UserPendingImages.COLUMN_NAME_RECEIPT_IMAGE, receiptImage.getAbsolutePath());
         contentValues.put(UserPendingImages.COLUMN_NAME_USER_ID, userId);
         db.insert(UserPendingImages.TABLE_NAME, null, contentValues);
     }
 
-    public Collection<UserImagesWrapper> find(String userId) {
+    public Collection<ImageStoredInDatabase> find(String userId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         String[] projection = {
                 UserPendingImages._ID,
                 UserPendingImages.COLUMN_NAME_RECEIPT_IMAGE,
-                UserPendingImages.COLUMN_NAME_RECEIPT_IMAGE_EXTENSION,
-
                 UserPendingImages.COLUMN_NAME_USER_ID,
                 UserPendingImages.COLUMN_NAME_INSERTED_AT
         };
@@ -73,28 +70,25 @@ public class PendingImagesDAO {
         db.delete(UserPendingImages.TABLE_NAME, UserPendingImages._ID + "=?", new String[]{String.valueOf(id)});
     }
 
-    private Collection<UserImagesWrapper> mapUserPendingImages(Cursor c) {
-        Set<UserImagesWrapper> userImages = new HashSet<>();
+    private Collection<ImageStoredInDatabase> mapUserPendingImages(Cursor c) {
+        Set<ImageStoredInDatabase> userImages = new HashSet<>();
         if (c != null && c.moveToFirst()) {
             do {
                 int id = c.getInt(c.getColumnIndex(UserPendingImages._ID));
-                String enterpriseIdImage = c.getString(c.getColumnIndex(UserPendingImages.COLUMN_NAME_RECEIPT_IMAGE));
-                String enterpriseIdFileExtension = c.getString(c.getColumnIndex(UserPendingImages.COLUMN_NAME_RECEIPT_IMAGE_EXTENSION));
+                String receiptImagePath = c.getString(c.getColumnIndex(UserPendingImages.COLUMN_NAME_RECEIPT_IMAGE));
                 String insertedAtString = c.getString(c.getColumnIndex(UserPendingImages.COLUMN_NAME_INSERTED_AT));
 
-
-                Date insertedAt;
+                Date insertedAt = null;
                 try {
                     insertedAt = parseDate(insertedAtString);
-                } catch (ParseException e) {
-                    throw new RuntimeException(e);
-                }
+                } catch (ParseException ignored) {}
 
-                UserImagesWrapper userImagesWrapper = new UserImagesWrapper(id, new ImageWrapper(enterpriseIdImage, enterpriseIdFileExtension),
-                        new ImageWrapper(null, null),
-                        insertedAt);
 
-                userImages.add(userImagesWrapper);
+                ImageStoredInDatabase image = new ImageStoredInDatabase();
+
+                image.id = id;
+                image.creationTime = insertedAt;
+                image.imageFile = new File(receiptImagePath);
 
             } while (c.moveToNext());
         }

@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +16,16 @@ import com.roman.ttu.client.R;
 import com.roman.ttu.client.SharedPreferenceManager;
 import com.roman.ttu.client.adapter.PendingImagesAdapter;
 import com.roman.ttu.client.db.PendingImagesDAO;
+import com.roman.ttu.client.model.ImageStoredInDatabase;
+import com.roman.ttu.client.model.ImagesWrapper;
 import com.roman.ttu.client.model.UserImagesWrapper;
 import com.roman.ttu.client.rest.ImagePostingService;
 import com.roman.ttu.client.service.AuthenticationAwareActivityCallback;
 import com.roman.ttu.client.util.IOUtil;
 import com.viewpagerindicator.UnderlinePageIndicator;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 
 import javax.inject.Inject;
@@ -31,6 +36,7 @@ import retrofit.client.Response;
 import static android.view.View.OnClickListener;
 import static com.roman.ttu.client.SharedPreferenceManager.USER_ID;
 import static com.roman.ttu.client.adapter.PendingImagesAdapter.IMAGES_KEY;
+import static com.roman.ttu.client.util.IOUtil.getFileExtension;
 
 public class PendingImagesActivity extends AuthenticationAwareActivity {
 
@@ -55,7 +61,7 @@ public class PendingImagesActivity extends AuthenticationAwareActivity {
         initializeContent(findUserImages());
     }
 
-    private void initializeContent(Collection<UserImagesWrapper> userImagesWrappers) {
+    private void initializeContent(Collection<ImageStoredInDatabase> userImagesWrappers) {
         if (!userImagesWrappers.isEmpty()) {
             initializeAdapter(userImagesWrappers);
             initializeViewPagerContent();
@@ -98,11 +104,11 @@ public class PendingImagesActivity extends AuthenticationAwareActivity {
         findViewById(R.id.buttons_bottom).setVisibility(View.GONE);
     }
 
-    private Collection<UserImagesWrapper> findUserImages() {
+    private Collection<ImageStoredInDatabase> findUserImages() {
         return pendingImagesDAO.find(preferenceManager.getString(USER_ID));
     }
 
-    private void initializeAdapter(Collection<UserImagesWrapper> userImagesWrappers) {
+    private void initializeAdapter(Collection<ImageStoredInDatabase> userImagesWrappers) {
         pendingImagesAdapter = new PendingImagesAdapter(getSupportFragmentManager(), userImagesWrappers);
     }
 
@@ -126,9 +132,32 @@ public class PendingImagesActivity extends AuthenticationAwareActivity {
 
     private void postImages() {
         currentItem = viewPager.getCurrentItem();
-        UserImagesWrapper userImagesWrapper = pendingImagesAdapter.getUserImagesWrapperBy(currentItem);
+        ImageStoredInDatabase imageStoredInDatabase = pendingImagesAdapter.getUserImagesWrapperBy(currentItem);
+        UserImagesWrapper userImagesWrapper = null;
+        try {
+            userImagesWrapper = convert(imageStoredInDatabase);
+        } catch (IOException e) {
+            Toast.makeText(this, "Failed to read image files", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         userImagesWrapper.registrationId = preferenceManager.getString(SharedPreferenceManager.GCM_REGISTRATION_ID);
         imagePostingService.postImages(userImagesWrapper, imagesPostingCallBack);
+    }
+
+    private UserImagesWrapper convert(ImageStoredInDatabase imageStoredInDatabase) throws IOException {
+        File imageFile = imageStoredInDatabase.imageFile;
+
+        String encodedImage = Base64.encodeToString(IOUtil.readFile(imageFile), Base64.DEFAULT);
+        ImagesWrapper.ImageWrapper imageWrapper = new ImagesWrapper.ImageWrapper(encodedImage, getFileExtension(imageFile.getName()));
+
+        UserImagesWrapper userImagesWrapper = new UserImagesWrapper(imageStoredInDatabase.id,
+                imageWrapper,
+                null,
+                imageStoredInDatabase.creationTime);
+
+
+        return userImagesWrapper;
     }
 
     private OnClickListener onClickSend = new OnClickListener() {
@@ -169,8 +198,8 @@ public class PendingImagesActivity extends AuthenticationAwareActivity {
     }
 
     private void handleImagesDeletion() {
-        UserImagesWrapper userImagesWrapper = pendingImagesAdapter.getUserImagesWrapperBy(currentItem);
-        pendingImagesDAO.delete(userImagesWrapper.id);
+        ImageStoredInDatabase imageStoredInDatabase = pendingImagesAdapter.getUserImagesWrapperBy(currentItem);
+        pendingImagesDAO.delete(imageStoredInDatabase.id);
         pendingImagesAdapter.remove(currentItem);
         progressDialog.dismiss();
 

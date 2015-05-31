@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 
+import com.roman.ttu.client.model.ImageStoredInDatabase;
 import com.roman.ttu.client.model.UserImagesWrapper;
 
 import java.util.ArrayList;
@@ -17,9 +18,9 @@ import static com.roman.ttu.client.activity.PendingImagesActivity.ImagesFragment
 public class PendingImagesAdapter extends FragmentStatePagerAdapter  {
 
     public static final String IMAGES_KEY = "images";
-    private List<UserImagesWrapper> userImagesWrapperList = new ArrayList<>();
+    private List<ImageStoredInDatabase> userImagesWrapperList = new ArrayList<>();
 
-    public PendingImagesAdapter(FragmentManager fm, Collection<UserImagesWrapper> userImagesWrappers) {
+    public PendingImagesAdapter(FragmentManager fm, Collection<ImageStoredInDatabase> userImagesWrappers) {
         super(fm);
         userImagesWrapperList.addAll(userImagesWrappers);
     }
@@ -33,7 +34,7 @@ public class PendingImagesAdapter extends FragmentStatePagerAdapter  {
         return imagesFragment;
     }
 
-    public UserImagesWrapper getUserImagesWrapperBy(int position) {
+    public ImageStoredInDatabase getUserImagesWrapperBy(int position) {
         return userImagesWrapperList.get(position);
     }
 
