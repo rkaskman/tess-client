@@ -89,6 +89,7 @@ public class PendingImagesDAO {
                 image.id = id;
                 image.creationTime = insertedAt;
                 image.imageFile = new File(receiptImagePath);
+                userImages.add(image);
 
             } while (c.moveToNext());
         }

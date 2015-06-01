@@ -1,6 +1,7 @@
 package com.roman.ttu.client.activity;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -121,10 +122,17 @@ public class PendingImagesActivity extends AuthenticationAwareActivity {
                     R.layout.view_pending_images, container, false);
 
             Bundle args = getArguments();
-            UserImagesWrapper userImagesWrapper = (UserImagesWrapper) args.get(IMAGES_KEY);
-            Bitmap receiptImageBitmap = IOUtil.decodeBase64Image(userImagesWrapper.receiptImage.encodedImage);
+            ImageStoredInDatabase userImagesWrapper = (ImageStoredInDatabase) args.get(IMAGES_KEY);
 
-            ((ImageView) rootView.findViewById(R.id.receipt_image)).setImageBitmap(receiptImageBitmap);
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 4;
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            Bitmap receiptImageBitmap = BitmapFactory.decodeFile(userImagesWrapper.imageFile.getPath(), options);
+
+            ImageView receiptImageView = (ImageView) rootView.findViewById(R.id.receipt_image);
+
+            receiptImageView.setImageBitmap(receiptImageBitmap);
 
             return rootView;
         }

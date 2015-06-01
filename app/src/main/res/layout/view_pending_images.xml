@@ -6,8 +6,8 @@
     <ImageView
         android:layout_marginTop="@dimen/spacing_medium"
         android:id="@+id/receipt_image"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"/>
 
 </RelativeLayout>
